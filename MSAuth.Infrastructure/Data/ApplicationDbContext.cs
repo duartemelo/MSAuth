@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MSAuth.Domain.Entities;
 
 namespace MSAuth.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        private readonly IConfiguration configuration;
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration _configuration) : base(options)
+        // Don't remove! Important to set DbContext
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            configuration = _configuration;
         }
 
-        // Definir DbSet para cada entidade do domínio
-        // public DbSet<YourEntity> YourEntities { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<App> Apps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
