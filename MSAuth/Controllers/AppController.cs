@@ -18,8 +18,8 @@ namespace MSAuth.API.Controllers
         [HttpPost]
         public async Task<ActionResult<AppCreateDTO>> CreateApp()
         {
-            var appDTO = await _appService.CreateAppAsync();
-            return Ok(appDTO);
+            var app = await _appService.CreateAppAsync();
+            return Ok(app);
         }
     }
 }

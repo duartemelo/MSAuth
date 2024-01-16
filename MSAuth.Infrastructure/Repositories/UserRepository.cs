@@ -19,9 +19,9 @@ namespace MSAuth.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<User?> GetByIdAsync(int userId)
+        public async Task<User?> GetByIdAsync(int userId, string appKey)
         {
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId && u.App != null && u.App.AppKey == appKey);
         }
 
         public async Task<User?> GetByEmailAsync(string email)

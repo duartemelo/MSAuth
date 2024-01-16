@@ -1,4 +1,5 @@
-﻿using MSAuth.Domain.Entities;
+﻿using MSAuth.Application.DTOs;
+using MSAuth.Domain.Entities;
 using MSAuth.Domain.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,21 @@ namespace MSAuth.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User?> GetUserByIdAsync(int userId)
+        public async Task<UserGetDTO?> GetUserByIdAsync(int userId, string appKey)
         {
-            return await _userRepository.GetByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId, appKey);
+
+            return user != null
+                ? new UserGetDTO
+                {
+                    Id = user.Id,
+                    ExternalId = user.ExternalId,
+                    Email = user.Email,
+                    DateOfRegister = user.DateOfRegister,
+                    DateOfModification = user.DateOfModification,
+                    DateOfLastAccess = user.DateOfLastAccess,
+                }
+                : null;
         }
     }
 }

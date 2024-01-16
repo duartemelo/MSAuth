@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MSAuth.Application.DTOs;
 using MSAuth.Application.Services;
 
 namespace MSAuth.API.Controllers
@@ -15,13 +16,21 @@ namespace MSAuth.API.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        public async Task<ActionResult<UserGetDTO>> GetUserById(int userId)
         {
-            var user = await _userService.GetUserByIdAsync(userId);
+            // Retrieve the AppKey from the request headers
+            if (!Request.Headers.TryGetValue("AppKey", out var appKey))
+            {
+                return BadRequest("AppKey not provided in headers.");
+            }
+
+            var user = await _userService.GetUserByIdAsync(userId, appKey.ToString());
+
             if (user == null)
             {
                 return NotFound();
             }
+
             return Ok(user);
         }
     }
