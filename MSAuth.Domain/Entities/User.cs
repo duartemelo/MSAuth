@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSAuth.Domain.DomainServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,15 @@ namespace MSAuth.Domain.Entities
         public User(string externalId, App app, string email, string password)
         {
             ExternalId = externalId;
+
+            if (app == null)
+                throw new ArgumentNullException(nameof(app), "A user must be associated with an app.");
+
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("E-mail cannot be empty.", nameof(email));
+
+            PasswordValidationService.ValidatePassword(password);
+
             App = app;
             Email = email;
 
