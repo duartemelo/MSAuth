@@ -29,9 +29,6 @@ namespace MSAuth.Domain.Entities
         {
             ExternalId = externalId;
 
-            if (app == null)
-                throw new ArgumentNullException(nameof(app), "A user must be associated with an app.");
-
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("E-mail cannot be empty.", nameof(email));
 

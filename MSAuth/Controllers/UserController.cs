@@ -27,7 +27,7 @@ namespace MSAuth.API.Controllers
             }
 
             return appKey;
-        } 
+        }
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserGetDTO>> GetUserById(int userId)
@@ -46,6 +46,22 @@ namespace MSAuth.API.Controllers
             }
 
             return Ok(user);
+        }
+
+        // TODO: GetUserByExternalId
+
+        [HttpPost]
+        public async Task<ActionResult<UserGetDTO>> PostUser(UserCreateDTO user)
+        {
+            var appKey = GetAppKey();
+            if (appKey == null)
+            {
+                return BadRequest();
+            }
+
+            // TODO: error / exception handling!
+            var createdUser = await _userService.CreateUserAsync(user, appKey);
+            return Ok(createdUser);
         }
     }
 }

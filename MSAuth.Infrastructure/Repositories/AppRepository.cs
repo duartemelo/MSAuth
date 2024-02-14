@@ -25,5 +25,10 @@ namespace MSAuth.Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return app;
         }
+
+        public async Task<App?> GetByAppKeyAsync(string appKey)
+        {
+            return await _context.Apps.FirstAsync(a => a.AppKey == appKey);
+        }
     }
 }

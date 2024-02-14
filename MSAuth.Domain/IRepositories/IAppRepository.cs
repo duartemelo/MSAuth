@@ -10,5 +10,6 @@ namespace MSAuth.Domain.IRepositories
     public interface IAppRepository
     {
         Task<App> AddAsync(App app);
+        Task<App?> GetByAppKeyAsync(string appKey);
     }
 }

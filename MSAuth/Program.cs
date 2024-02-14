@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.IRepositories;
 using MSAuth.Infrastructure.Data;
@@ -7,6 +9,14 @@ using MSAuth.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new UserMappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 // Add services to the container.
 builder.Services.AddControllers();
