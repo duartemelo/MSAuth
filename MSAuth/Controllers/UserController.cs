@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MSAuth.API.ActionFilters;
 using MSAuth.Application.DTOs;
 using MSAuth.Application.Services;
 
 namespace MSAuth.API.Controllers
 {
     [ApiController]
+    [RequireAppKey]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
@@ -15,16 +17,28 @@ namespace MSAuth.API.Controllers
             _userService = userService;
         }
 
+        private string? GetAppKey()
+        {
+            string? appKey = HttpContext.Items["AppKey"]?.ToString();
+
+            if (appKey == null)
+            {
+                return null;
+            }
+
+            return appKey;
+        } 
+
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserGetDTO>> GetUserById(int userId)
         {
-            // Retrieve the AppKey from the request headers
-            if (!Request.Headers.TryGetValue("AppKey", out var appKey))
+            var appKey = GetAppKey();
+            if (appKey == null)
             {
-                return BadRequest("AppKey not provided in headers.");
+                return BadRequest();
             }
 
-            var user = await _userService.GetUserByIdAsync(userId, appKey.ToString());
+            var user = await _userService.GetUserByIdAsync(userId, appKey);
 
             if (user == null)
             {
