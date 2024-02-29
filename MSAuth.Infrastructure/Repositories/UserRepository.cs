@@ -29,6 +29,11 @@ namespace MSAuth.Infrastructure.Repositories
             return await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
 
+        public async Task<Boolean> GetUserExistsSameAppByEmail(string email, string appKey)
+        {
+            return await _context.Users.AnyAsync(user => user.Email == email && user.App != null && user.App.AppKey == appKey);
+        }
+
         public async Task AddAsync(User user)
         {
             _context.Users.Add(user);

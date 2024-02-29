@@ -11,6 +11,7 @@ namespace MSAuth.Domain.IRepositories
     {
         Task<User?> GetByIdAsync(int userId, string appKey);
         Task<User?> GetByEmailAsync(string email);
+        Task<Boolean> GetUserExistsSameAppByEmail(string email, string appKey);
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);

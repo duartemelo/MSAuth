@@ -1,4 +1,5 @@
 using AutoMapper;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
@@ -26,12 +27,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppRepository, AppRepository>();
+builder.Services.AddScoped<IUserConfirmationRepository, UserConfirmationRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AppService>();
+builder.Services.AddScoped<EmailService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHangfire((sp, config) =>
+{
+    var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("HangfireConnection");
+    config.UseSqlServerStorage(connectionString);
+});
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 

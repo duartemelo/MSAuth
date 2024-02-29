@@ -28,7 +28,7 @@ namespace MSAuth.Infrastructure.Repositories
 
         public async Task<App?> GetByAppKeyAsync(string appKey)
         {
-            return await _context.Apps.FirstAsync(a => a.AppKey == appKey);
+            return await _context.Apps.FirstOrDefaultAsync(a => a.AppKey == appKey);
         }
     }
 }

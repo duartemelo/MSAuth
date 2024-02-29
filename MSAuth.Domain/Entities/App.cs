@@ -9,17 +9,11 @@ namespace MSAuth.Domain.Entities
     public class App
     {
         public int Id { get; set; }
-        public string AppKey { get; set; }
+        public string AppKey { get; set; } 
 
         public App()
         {
-            AppKey = GenerateUniqueAppKey();
-        }
-
-        // Método privado para gerar uma AppKey única
-        private string GenerateUniqueAppKey()
-        {
-            return Guid.NewGuid().ToString();
+            AppKey = Guid.NewGuid().ToString();
         }
     }
 }
