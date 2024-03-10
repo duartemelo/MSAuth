@@ -1,9 +1,12 @@
 using AutoMapper;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MSAuth.API.ActionFilters;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.IRepositories;
+using MSAuth.Domain.Notifications;
 using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.Repositories;
 
@@ -20,14 +23,23 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<NotificationFilter>();
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add Notification
+builder.Services.AddScoped<NotificationContext>();
+
+// Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppRepository, AppRepository>();
 builder.Services.AddScoped<IUserConfirmationRepository, UserConfirmationRepository>();
+
+// Add Services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AppService>();
 builder.Services.AddScoped<EmailService>();

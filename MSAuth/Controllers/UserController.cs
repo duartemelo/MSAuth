@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSAuth.API.ActionFilters;
+using MSAuth.API.Extensions;
+using MSAuth.API.Utils;
 using MSAuth.Application.DTOs;
 using MSAuth.Application.Services;
+using MSAuth.Domain.Notifications;
 
 namespace MSAuth.API.Controllers
 {
@@ -11,57 +14,27 @@ namespace MSAuth.API.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
-
-        public UserController(UserService userService)
+        private readonly NotificationContext _notificationContext;
+        public UserController(UserService userService, NotificationContext notificationContext)
         {
             _userService = userService;
-        }
-
-        private string? GetAppKey()
-        {
-            string? appKey = HttpContext.Items["AppKey"]?.ToString();
-
-            if (appKey == null)
-            {
-                return null;
-            }
-
-            return appKey;
+            _notificationContext = notificationContext;
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserGetDTO>> GetUserById(int userId)
+        public async Task<IActionResult> GetUserById(int userId)
         {
-            var appKey = GetAppKey();
-            if (appKey == null)
-            {
-                return BadRequest();
-            }
-
-            var user = await _userService.GetUserByIdAsync(userId, appKey);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
+            var user = await _userService.GetUserByIdAsync(userId, AppKey.GetAppKey(HttpContext));
+            return DomainResult<UserGetDTO?>.Ok(user, _notificationContext);         
         }
 
         // TODO: GetUserByExternalId
 
         [HttpPost]
-        public async Task<ActionResult<UserGetDTO>> PostUser(UserCreateDTO user)
+        public async Task<IActionResult> PostUser(UserCreateDTO user)
         {
-            var appKey = GetAppKey();
-            if (appKey == null)
-            {
-                return BadRequest();
-            }
-
-            // TODO: error / exception handling!
-            var createdUser = await _userService.CreateUserAsync(user, appKey);
-            return Ok(createdUser);
+            var createdUser = await _userService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
+            return DomainResult<UserGetDTO?>.Ok(createdUser, _notificationContext);
         }
     }
 }
