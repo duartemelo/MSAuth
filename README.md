@@ -20,4 +20,6 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [ ] Email service
 - [X] Install and simple example of Hangfire
 - [ ] Implement all endpoints
-- [ ] Create separate MS to consume this one 😎
+- [ ] Docker containerization
+- [ ] Create an orchestrator to consume this MS, and many more 😎
+- [ ] Create a front-end to consume the back-end services
