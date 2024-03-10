@@ -7,10 +7,12 @@ using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Domain.Interfaces.Services;
+using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
 using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.Repositories;
+using MSAuth.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,10 +39,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add Notification
 builder.Services.AddScoped<NotificationContext>();
 
-// Add Repositories
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAppRepository, AppRepository>();
-builder.Services.AddScoped<IUserConfirmationRepository, UserConfirmationRepository>();
+// Add UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
 builder.Services.AddScoped<IAppService, AppService>();

@@ -2,11 +2,6 @@
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSAuth.Infrastructure.Repositories
 {
@@ -19,10 +14,9 @@ namespace MSAuth.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<App> AddAsync(App app)
+        public App Add(App app)
         {
             _context.Apps.Add(app);
-            await _context.SaveChangesAsync();
             return app;
         }
 

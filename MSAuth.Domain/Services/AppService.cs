@@ -1,28 +1,23 @@
-﻿using MSAuth.Domain.DTOs;
-using MSAuth.Domain.Entities;
+﻿using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Domain.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MSAuth.Domain.Interfaces.UnitOfWork;
 
 namespace MSAuth.Domain.Services
 {
     public class AppService : IAppService
     {
-        private readonly IAppRepository _appRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AppService(IAppRepository appRepository)
+        public AppService(IUnitOfWork unitOfWork)
         {
-            _appRepository = appRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<App> CreateAppSync()
+        public App CreateApp()
         {
             var app = new App();
-            return await _appRepository.AddAsync(app);
+            return _unitOfWork.AppRepository.Add(app);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MSAuth.Domain.Interfaces.Repositories
         Task<User?> GetByIdAsync(int userId, string appKey);
         Task<User?> GetByEmailAsync(string email);
         Task<bool> GetUserExistsSameAppByEmail(string email, string appKey);
-        Task AddAsync(User user);
+        User Add(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);
     }

@@ -13,10 +13,9 @@ namespace MSAuth.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<UserConfirmation> AddAsync(UserConfirmation userConfirmation)
+        public UserConfirmation Add(UserConfirmation userConfirmation)
         {
             _context.UserConfirmations.Add(userConfirmation);
-            await _context.SaveChangesAsync();
             return userConfirmation;
         }
     }

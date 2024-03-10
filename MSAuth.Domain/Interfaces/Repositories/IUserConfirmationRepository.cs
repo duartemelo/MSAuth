@@ -9,6 +9,6 @@ namespace MSAuth.Domain.Interfaces.Repositories
 {
     public interface IUserConfirmationRepository
     {
-        Task<UserConfirmation> AddAsync(UserConfirmation userConfirmation);
+        UserConfirmation Add(UserConfirmation userConfirmation);
     }
 }

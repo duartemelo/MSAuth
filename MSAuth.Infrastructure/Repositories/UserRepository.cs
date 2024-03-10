@@ -29,12 +29,13 @@ namespace MSAuth.Infrastructure.Repositories
             return await _context.Users.AnyAsync(user => user.Email == email && user.App != null && user.App.AppKey == appKey);
         }
 
-        public async Task AddAsync(User user)
+        public User Add(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            return user;
         }
 
+        // make a base entity update / delete methods (TODO)
         public async Task UpdateAsync(User user)
         {
             _context.Entry(user).State = EntityState.Modified;
