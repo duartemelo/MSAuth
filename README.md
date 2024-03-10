@@ -10,7 +10,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 
 - [X] Base layers (CLEAN architecture, DDD)
 - [x] Dependency injection
-- [ ] Unit Of Work
+- [X] Unit Of Work
 - [X] Notification Context
 - [X] Notification Filter
 - [ ] Model validation errors
