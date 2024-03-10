@@ -1,9 +1,4 @@
 ﻿using MSAuth.Domain.DomainServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static MSAuth.Domain.DomainServices.SharedUtilities;
 
 namespace MSAuth.Domain.Entities
@@ -25,6 +20,7 @@ namespace MSAuth.Domain.Entities
         {
         }
 
+        // TODO: pass to domain
         public User(string externalId, App app, string email, string password)
         {
             ExternalId = externalId;
@@ -44,6 +40,9 @@ namespace MSAuth.Domain.Entities
             DateOfRegister = DateTime.UtcNow;
         }
 
+        // TODO: create base entity with DateOfCreation and DateOfModification and all entities inherit that 
+        // then, create an Update method that can update any base entity, updating their DateOfModification
+        // and a Create method that can create any base entity, setting their DateOfCreation
         public void UpdateUser()
         {
             DateOfModification = DateTime.UtcNow;

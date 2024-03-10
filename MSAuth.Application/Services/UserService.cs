@@ -28,18 +28,7 @@ namespace MSAuth.Application.Services
         public async Task<UserGetDTO?> GetUserByIdAsync(int userId, string appKey)
         {
             var user = await _userRepository.GetByIdAsync(userId, appKey);
-
-            return user != null
-                ? new UserGetDTO
-                {
-                    Id = user.Id,
-                    ExternalId = user.ExternalId,
-                    Email = user.Email,
-                    DateOfRegister = user.DateOfRegister,
-                    DateOfModification = user.DateOfModification,
-                    DateOfLastAccess = user.DateOfLastAccess,
-                }
-                : null;
+            return _mapper.Map<UserGetDTO>(user);
         }
 
         public async Task<UserGetDTO?> CreateUserAsync(UserCreateDTO user, string appKey)
@@ -58,6 +47,7 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
+            // TODO: change to domain
             User? userToCreate;
             try
             {

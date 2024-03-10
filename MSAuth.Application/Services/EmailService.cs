@@ -1,12 +1,5 @@
-﻿using Hangfire;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using MSAuth.Domain.Entities;
+﻿using MSAuth.Domain.Entities;
 using MSAuth.Domain.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSAuth.Application.Services
 {
