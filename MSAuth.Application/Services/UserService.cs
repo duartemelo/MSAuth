@@ -4,6 +4,7 @@ using MSAuth.Application.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.IRepositories;
 using MSAuth.Domain.Notifications;
+using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
 {
@@ -46,14 +47,14 @@ namespace MSAuth.Application.Services
             var app = await _appRepository.GetByAppKeyAsync(appKey);
             if (app == null)
             {
-                _notificationContext.AddNotification("APP_NOT_FOUND", string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
                 return null; 
             }
 
             var userExists = await _userRepository.GetUserExistsSameAppByEmail(user.Email, appKey);
             if (userExists)
             {
-                _notificationContext.AddNotification("USER_ALREADY_EXISTS", string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
                 return null;
             }
 
@@ -63,7 +64,7 @@ namespace MSAuth.Application.Services
                 userToCreate = new User(user.ExternalId, app, user.Email, user.Password);
             } catch (Exception ex)
             {
-                _notificationContext.AddNotification("ENTITY_VALIDATION_ERROR", ex.Message);
+                _notificationContext.AddNotification(NotificationKeys.ENTITY_VALIDATION_ERROR, ex.Message);
                 return null;
             }
             

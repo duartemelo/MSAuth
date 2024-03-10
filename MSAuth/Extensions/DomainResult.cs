@@ -7,16 +7,13 @@ namespace MSAuth.API.Extensions
     public class DomainResult<T>
     {
         private readonly NotificationContext _notificationContext;
+        public T Value { get; set; }
 
         internal DomainResult(T value, NotificationContext notificationContext)
         {
             _notificationContext = notificationContext;
             Value = value;
         }
-
-        public Dictionary<string, string> Notifications => _notificationContext.Notifications.ToDictionary(e => e.Error, e => e.Message);
-        public bool Success => !_notificationContext.HasNotifications;
-        public T Value { get; set; }
 
         public static IActionResult Ok(T value, NotificationContext notificationContext)
         {
