@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSAuth.Domain.Entities;
-using MSAuth.Domain.IRepositories;
+using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Infrastructure.Data;
 using System;
 using System.Collections.Generic;

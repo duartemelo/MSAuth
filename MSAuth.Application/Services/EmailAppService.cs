@@ -1,14 +1,14 @@
 ﻿using MSAuth.Domain.Entities;
-using MSAuth.Domain.IRepositories;
+using MSAuth.Domain.Interfaces.Repositories;
 
 namespace MSAuth.Application.Services
 {
-    public class EmailService
+    public class EmailAppService
     {
         private readonly IUserConfirmationRepository _userConfirmationRepository;
         private readonly IUserRepository _userRepository;
 
-        public EmailService(IUserConfirmationRepository userConfirmationRepository, IUserRepository userRepository)
+        public EmailAppService(IUserConfirmationRepository userConfirmationRepository, IUserRepository userRepository)
         {
             _userConfirmationRepository = userConfirmationRepository;
             _userRepository = userRepository;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Domain.IRepositories
+namespace MSAuth.Domain.Interfaces.Repositories
 {
     public interface IAppRepository
     {

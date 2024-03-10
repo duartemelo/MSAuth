@@ -5,8 +5,10 @@ using Microsoft.Extensions.Options;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
-using MSAuth.Domain.IRepositories;
+using MSAuth.Domain.Interfaces.Repositories;
+using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Notifications;
+using MSAuth.Domain.Services;
 using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.Repositories;
 
@@ -17,6 +19,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false);
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new UserMappingProfile());
+    mc.AddProfile(new AppMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -39,10 +42,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppRepository, AppRepository>();
 builder.Services.AddScoped<IUserConfirmationRepository, UserConfirmationRepository>();
 
-// Add Services
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<AppService>();
-builder.Services.AddScoped<EmailService>();
+// Add Domain Services
+builder.Services.AddScoped<IAppService, AppService>();
+
+// Add App Services
+builder.Services.AddScoped<UserAppService>();
+builder.Services.AddScoped<AppAppService>();
+builder.Services.AddScoped<EmailAppService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

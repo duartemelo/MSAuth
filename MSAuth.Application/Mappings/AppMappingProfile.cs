@@ -4,10 +4,11 @@ using MSAuth.Domain.Entities;
 
 namespace MSAuth.Application.Mappings
 {
-    public class UserMappingProfile : Profile
+    public class AppMappingProfile : Profile
     {
-        public UserMappingProfile() {
-            CreateMap<User, UserGetDTO>();
+        public AppMappingProfile()
+        {
+            CreateMap<App, AppCreateDTO>();
         }
     }
 }

@@ -2,8 +2,8 @@
 using MSAuth.API.ActionFilters;
 using MSAuth.API.Extensions;
 using MSAuth.API.Utils;
-using MSAuth.Application.DTOs;
 using MSAuth.Application.Services;
+using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Notifications;
 
 namespace MSAuth.API.Controllers
@@ -13,9 +13,9 @@ namespace MSAuth.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly UserAppService _userService;
         private readonly NotificationContext _notificationContext;
-        public UserController(UserService userService, NotificationContext notificationContext)
+        public UserController(UserAppService userService, NotificationContext notificationContext)
         {
             _userService = userService;
             _notificationContext = notificationContext;

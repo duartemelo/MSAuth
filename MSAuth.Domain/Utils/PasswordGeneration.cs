@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Domain.DomainServices
+namespace MSAuth.Domain.Utils
 {
-    public class SharedUtilities
+    public class PasswordGeneration
     {
         public struct Password
         {

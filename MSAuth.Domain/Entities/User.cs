@@ -1,5 +1,5 @@
-﻿using MSAuth.Domain.DomainServices;
-using static MSAuth.Domain.DomainServices.SharedUtilities;
+﻿using MSAuth.Domain.Utils;
+using static MSAuth.Domain.Utils.PasswordGeneration;
 
 namespace MSAuth.Domain.Entities
 {
@@ -28,7 +28,7 @@ namespace MSAuth.Domain.Entities
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("E-mail cannot be empty.", nameof(email));
 
-            PasswordValidationService.ValidatePassword(password);
+            PasswordValidation.ValidatePassword(password);
 
             App = app;
             Email = email;

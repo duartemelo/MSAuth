@@ -1,11 +1,4 @@
-﻿using MSAuth.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MSAuth.Application.DTOs
+﻿namespace MSAuth.Domain.DTOs
 {
     public class UserGetDTO
     {

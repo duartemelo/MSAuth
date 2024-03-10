@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSAuth.API.Extensions;
-using MSAuth.Application.DTOs;
 using MSAuth.Application.Services;
+using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Notifications;
 
 namespace MSAuth.API.Controllers
@@ -10,10 +10,10 @@ namespace MSAuth.API.Controllers
     [Route("api/[controller]")]
     public class AppController : Controller
     {
-        private readonly AppService _appService;
+        private readonly AppAppService _appService;
         private readonly NotificationContext _notificationContext;
 
-        public AppController(AppService appService, NotificationContext notificationContext)
+        public AppController(AppAppService appService, NotificationContext notificationContext)
         {
             _appService = appService;
             _notificationContext = notificationContext;

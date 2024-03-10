@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Domain.IRepositories
+namespace MSAuth.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
         Task<User?> GetByIdAsync(int userId, string appKey);
         Task<User?> GetByEmailAsync(string email);
-        Task<Boolean> GetUserExistsSameAppByEmail(string email, string appKey);
+        Task<bool> GetUserExistsSameAppByEmail(string email, string appKey);
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);

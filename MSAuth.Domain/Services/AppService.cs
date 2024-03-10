@@ -1,15 +1,16 @@
-﻿using MSAuth.Application.DTOs;
+﻿using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
-using MSAuth.Domain.IRepositories;
+using MSAuth.Domain.Interfaces.Repositories;
+using MSAuth.Domain.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Application.Services
+namespace MSAuth.Domain.Services
 {
-    public class AppService
+    public class AppService : IAppService
     {
         private readonly IAppRepository _appRepository;
 
@@ -18,16 +19,10 @@ namespace MSAuth.Application.Services
             _appRepository = appRepository;
         }
 
-        public async Task<AppCreateDTO> CreateAppAsync()
+        public async Task<App> CreateAppSync()
         {
             var app = new App();
-
-            await _appRepository.AddAsync(app);
-
-            return new AppCreateDTO
-            {
-                AppKey = app.AppKey
-            };
+            return await _appRepository.AddAsync(app);
         }
     }
 }

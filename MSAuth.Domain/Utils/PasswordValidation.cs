@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Domain.DomainServices
+namespace MSAuth.Domain.Utils
 {
-    public class PasswordValidationService
+    public class PasswordValidation
     {
         public static void ValidatePassword(string password)
         {
