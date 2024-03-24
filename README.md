@@ -23,5 +23,5 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [ ] Implement all endpoints
 - [ ] JWT Authentication
 - [ ] Docker containerization
-- [ ] Create an orchestrator to consume this MS, and many more 😎
+- [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
