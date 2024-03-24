@@ -1,14 +1,17 @@
 using AutoMapper;
+using FluentValidation;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
+using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
+using MSAuth.Domain.Validators;
 using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.UnitOfWork;
 
@@ -47,6 +50,12 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Add Domain Services
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+
+// Add Domain Validators
+builder.Services.AddScoped<IValidator<UserCreateDTO>, UserCreateDTOValidator>();
+
+builder.Services.AddScoped<EntityValidationService>();
 
 // Add App Services
 builder.Services.AddScoped<UserAppService>();
