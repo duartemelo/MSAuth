@@ -1,5 +1,4 @@
 ﻿using MSAuth.Domain.Entities;
-using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 

@@ -1,17 +1,23 @@
-﻿using MSAuth.Domain.Entities;
+﻿using Hangfire;
+using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.UnitOfWork;
+using MSAuth.Domain.Notifications;
+using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
 {
     public class EmailAppService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly NotificationContext _notificationContext;
 
-        public EmailAppService(IUnitOfWork unitOfWork)
+        public EmailAppService(IUnitOfWork unitOfWork, NotificationContext notificationContext)
         {
             _unitOfWork = unitOfWork;
+            _notificationContext = notificationContext;
         }
 
+        [AutomaticRetry(Attempts = 5)]
         public async Task SendUserConfirmationJob(int userId, string appKey)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
@@ -28,7 +34,7 @@ namespace MSAuth.Application.Services
 
             if (!await _unitOfWork.CommitAsync())
             {
-                // TODO: add notification post failed
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
             }
         }
 

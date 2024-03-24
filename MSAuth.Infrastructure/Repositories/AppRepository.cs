@@ -5,19 +5,13 @@ using MSAuth.Infrastructure.Data;
 
 namespace MSAuth.Infrastructure.Repositories
 {
-    public class AppRepository : IAppRepository
+    public class AppRepository : BaseRepository<App>, IAppRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public AppRepository(ApplicationDbContext context)
+        public AppRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
-        }
-
-        public App Add(App app)
-        {
-            _context.Apps.Add(app);
-            return app;
         }
 
         public async Task<App?> GetByAppKeyAsync(string appKey)

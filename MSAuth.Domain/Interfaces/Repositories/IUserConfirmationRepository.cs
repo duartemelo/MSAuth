@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSAuth.Domain.Interfaces.Repositories
 {
-    public interface IUserConfirmationRepository
+    public interface IUserConfirmationRepository : IBaseRepository<UserConfirmation>
     {
-        UserConfirmation Add(UserConfirmation userConfirmation);
     }
 }

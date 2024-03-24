@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace MSAuth.Domain.Entities
 {
-    public class UserConfirmation
+    public class UserConfirmation : BaseEntity
     {
-        public int Id { get; set; }
         public User? User { get; set; }
         public string Token { get; set; } = Guid.NewGuid().ToString();
-        public DateTime DateOfCreation { get; set; } = DateTime.Now;
         public DateTime? DateOfConfirm { get; set; }
         public DateTime DateOfExpire { get; set; } = DateTime.Now.AddHours(2);
 

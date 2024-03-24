@@ -5,11 +5,11 @@ using MSAuth.Infrastructure.Data;
 
 namespace MSAuth.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -28,25 +28,5 @@ namespace MSAuth.Infrastructure.Repositories
         {
             return await _context.Users.AnyAsync(user => user.Email == email && user.App != null && user.App.AppKey == appKey);
         }
-
-        public User Add(User user)
-        {
-            _context.Users.Add(user);
-            return user;
-        }
-
-        // make a base entity update / delete methods (TODO)
-        public async Task UpdateAsync(User user)
-        {
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(User user)
-        {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-        }
-
     }
 }

@@ -14,6 +14,7 @@ namespace MSAuth.Domain.Constants
             public static readonly string APP_NOT_FOUND = "APP_NOT_FOUND";
             public static readonly string USER_ALREADY_EXISTS = "USER_ALREADY_EXISTS";
             public static readonly string ENTITY_VALIDATION_ERROR = "ENTITY_VALIDATION_ERROR";
+            public static readonly string DATABASE_COMMIT_ERROR = "DATABASE_COMMIT_ERROR";
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Hangfire;
 using MSAuth.Domain.DTOs;
-using MSAuth.Domain.Entities;
+using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
 using static MSAuth.Domain.Constants.Constants;
@@ -12,13 +12,15 @@ namespace MSAuth.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly EmailAppService _emailService;
+        private readonly IUserService _userService;
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
 
-        public UserAppService(IUnitOfWork unitOfWork, EmailAppService emailService, NotificationContext notificationContext, IMapper mapper)
+        public UserAppService(IUnitOfWork unitOfWork, EmailAppService emailService, IUserService userService ,NotificationContext notificationContext, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _emailService = emailService;
+            _userService = userService;
             _notificationContext = notificationContext;
             _mapper = mapper;
         }
@@ -37,40 +39,33 @@ namespace MSAuth.Application.Services
                 _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
                 return null;
             }
-                
 
             var userExists = await _unitOfWork.UserRepository.GetUserExistsSameAppByEmail(user.Email, appKey);
             if (userExists)
+            {
                 _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
-
-            if (!_notificationContext.HasNotifications && app != null) {
-                // TODO: change to domain
-                User? userToCreate;
-                try
-                {
-                    userToCreate = new User(user.ExternalId, app, user.Email, user.Password);
-                }
-                catch (Exception ex)
-                {
-                    _notificationContext.AddNotification(NotificationKeys.ENTITY_VALIDATION_ERROR, ex.Message);
-                    return null;
-                }
-
-                _unitOfWork.UserRepository.Add(userToCreate);
-                if (!await _unitOfWork.CommitAsync())
-                {
-                    // TODO: add notification post failed
-                } else
-                {
-                    // simulating sending an email
-                    // TODO: put in background job only the communication with email service
-                    BackgroundJob.Enqueue(() => _emailService.SendUserConfirmationJob(userToCreate.Id, appKey));
-                    Console.WriteLine("Job was sent to queue!");
-                }
-                return _mapper.Map<UserGetDTO>(userToCreate);
+                return null;
             }
 
-            return null;
+            var createdUser = _userService.CreateUser(user, app); // TODO: entity validation
+
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                return null;
+            }
+
+            SendUserConfirmation(createdUser.Id, appKey);
+            
+            return _mapper.Map<UserGetDTO>(createdUser);
+        }
+
+
+        // TODO: put only communication with external service in the job, separate this to UserConfirmationAppService
+        private void SendUserConfirmation(int userId, string appKey)
+        {
+            BackgroundJob.Enqueue(() => _emailService.SendUserConfirmationJob(userId, appKey));
+            Console.WriteLine("Job was sent to queue!");
         }
     }
 }

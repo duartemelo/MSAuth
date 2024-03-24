@@ -4,19 +4,13 @@ using MSAuth.Infrastructure.Data;
 
 namespace MSAuth.Infrastructure.Repositories
 {
-    public class UserConfirmationRepository : IUserConfirmationRepository
+    public class UserConfirmationRepository : BaseRepository<UserConfirmation>, IUserConfirmationRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public UserConfirmationRepository(ApplicationDbContext context)
+        public UserConfirmationRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
-        }
-
-        public UserConfirmation Add(UserConfirmation userConfirmation)
-        {
-            _context.UserConfirmations.Add(userConfirmation);
-            return userConfirmation;
         }
     }
 }
