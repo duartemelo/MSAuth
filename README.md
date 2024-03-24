@@ -14,7 +14,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Notification Context
 - [X] Notification Filter
 - [X] Model validation errors
-- [ ] Add FluentValidation to simplify model validation
+- [X] Add FluentValidation to simplify model validation
 - [X] AutoMapper
 - [ ] All DTO mappings
 - [ ] Migrate creating/updating/returning/deleting objects to Domain Services, and leave inter-entity business rules to AppServices
