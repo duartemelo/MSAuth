@@ -3,6 +3,7 @@ using Hangfire;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
+using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using static MSAuth.Domain.Constants.Constants;
 
@@ -47,7 +48,12 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            var createdUser = _userService.CreateUser(user, app); // TODO: entity validation
+            var createdUser = _userService.CreateUser(user, app);
+
+            if (createdUser == null)
+            {
+                return null;
+            }
 
             if (!await _unitOfWork.CommitAsync())
             {
@@ -56,7 +62,7 @@ namespace MSAuth.Application.Services
             }
 
             SendUserConfirmation(createdUser.Id, appKey);
-            
+
             return _mapper.Map<UserGetDTO>(createdUser);
         }
 

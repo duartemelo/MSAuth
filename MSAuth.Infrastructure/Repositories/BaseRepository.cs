@@ -15,12 +15,6 @@ namespace MSAuth.Infrastructure.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public T Create(T entity)
-        {
-            // ao fazer create vai validar uma entidade
-
-        }
-
         public T Add(T entity)
         {
             entity.DateOfCreation = DateTime.Now;

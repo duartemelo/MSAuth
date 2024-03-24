@@ -5,6 +5,6 @@ namespace MSAuth.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        User CreateUser(UserCreateDTO userToCreate, App app);
+        User? CreateUser(UserCreateDTO userToCreate, App app);
     }
 }

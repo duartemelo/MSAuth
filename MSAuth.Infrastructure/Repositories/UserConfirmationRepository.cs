@@ -6,11 +6,9 @@ namespace MSAuth.Infrastructure.Repositories
 {
     public class UserConfirmationRepository : BaseRepository<UserConfirmation>, IUserConfirmationRepository
     {
-        private readonly ApplicationDbContext _context;
-
         public UserConfirmationRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            
         }
     }
 }

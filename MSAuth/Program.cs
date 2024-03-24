@@ -1,17 +1,15 @@
 using AutoMapper;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
-using MSAuth.Domain.Interfaces.Repositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
+using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
 using MSAuth.Infrastructure.Data;
-using MSAuth.Infrastructure.Repositories;
 using MSAuth.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +29,7 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<NotificationFilter>();
+    options.Filters.Add<ModelErrorFilter>();
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -39,11 +38,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add Notification
 builder.Services.AddScoped<NotificationContext>();
 
+// Add Model Errors
+builder.Services.AddScoped<ModelErrorsContext>();
+
 // Add UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
 builder.Services.AddScoped<IAppService, AppService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add App Services
 builder.Services.AddScoped<UserAppService>();

@@ -4,6 +4,7 @@ using MSAuth.API.Extensions;
 using MSAuth.API.Utils;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
+using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 
 namespace MSAuth.API.Controllers
@@ -15,17 +16,19 @@ namespace MSAuth.API.Controllers
     {
         private readonly UserAppService _userService;
         private readonly NotificationContext _notificationContext;
-        public UserController(UserAppService userService, NotificationContext notificationContext)
+        private readonly ModelErrorsContext _modelErrorsContext;
+        public UserController(UserAppService userService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
         {
             _userService = userService;
             _notificationContext = notificationContext;
+            _modelErrorsContext = modelErrorsContext;
         }
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)
         {
             var user = await _userService.GetUserByIdAsync(userId, AppKey.GetAppKey(HttpContext));
-            return DomainResult<UserGetDTO?>.Ok(user, _notificationContext);         
+            return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
         }
 
         // TODO: GetUserByExternalId
@@ -34,7 +37,7 @@ namespace MSAuth.API.Controllers
         public async Task<IActionResult> PostUser(UserCreateDTO user)
         {
             var createdUser = await _userService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
-            return DomainResult<UserGetDTO?>.Ok(createdUser, _notificationContext);
+            return DomainResult<UserGetDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
         }
     }
 }
