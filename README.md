@@ -14,6 +14,8 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Notification Context
 - [X] Notification Filter
 - [X] Model validation errors
+- [X] Model Error Context
+- [X] Model Error Filter
 - [X] Add FluentValidation to simplify model validation
 - [X] AutoMapper
 - [ ] All DTO mappings
