@@ -3,6 +3,7 @@ using FluentValidation;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
+using MSAuth.Application.Interfaces;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Add Domain Services
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserConfirmationService, UserConfirmationService>();
 
 
 // Add Domain Validators
@@ -58,9 +60,9 @@ builder.Services.AddScoped<IValidator<UserCreateDTO>, UserCreateDTOValidator>();
 builder.Services.AddScoped<EntityValidationService>();
 
 // Add App Services
-builder.Services.AddScoped<UserAppService>();
-builder.Services.AddScoped<AppAppService>();
-builder.Services.AddScoped<EmailAppService>();
+builder.Services.AddScoped<IUserAppService ,UserAppService>();
+builder.Services.AddScoped<IAppAppService ,AppAppService>();
+builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -79,6 +81,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHangfireDashboard();
 }
 
 app.UseHttpsRedirection();

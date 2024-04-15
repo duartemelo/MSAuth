@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
@@ -7,7 +8,7 @@ using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
 {
-    public class AppAppService
+    public class AppAppService : IAppAppService
     {
         private readonly IAppService _appService;
         private readonly IMapper _mapper;
@@ -25,7 +26,8 @@ namespace MSAuth.Application.Services
         public async Task<AppCreateDTO> CreateAppAsync()
         {
             var app = _appService.CreateApp();
-            if (!await _unitOfWork.CommitAsync()) {
+            if (!await _unitOfWork.CommitAsync())
+            {
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
             }
             return _mapper.Map<AppCreateDTO>(app);

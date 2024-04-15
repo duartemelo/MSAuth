@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Hangfire;
+using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
@@ -9,21 +9,23 @@ using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
 {
-    public class UserAppService
+    public class UserAppService : IUserAppService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmailAppService _emailService;
         private readonly IUserService _userService;
+        private readonly IUserConfirmationAppService _userConfirmationAppService;
+        private readonly ModelErrorsContext _modelErrorsContext;
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
 
-        public UserAppService(IUnitOfWork unitOfWork, EmailAppService emailService, IUserService userService ,NotificationContext notificationContext, IMapper mapper)
+        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationAppService userConfirmationAppService, ModelErrorsContext modelErrorsContext)
         {
             _unitOfWork = unitOfWork;
-            _emailService = emailService;
             _userService = userService;
             _notificationContext = notificationContext;
             _mapper = mapper;
+            _userConfirmationAppService = userConfirmationAppService;
+            _modelErrorsContext = modelErrorsContext;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(int userId, string appKey)
@@ -50,28 +52,16 @@ namespace MSAuth.Application.Services
 
             var createdUser = _userService.CreateUser(user, app);
 
-            if (createdUser == null)
-            {
-                return null;
-            }
-
-            if (!await _unitOfWork.CommitAsync())
+            if (createdUser != null && !await _unitOfWork.CommitAsync())
             {
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
-                return null;
             }
 
-            SendUserConfirmation(createdUser.Id, appKey);
+            if (createdUser != null)
+                _userConfirmationAppService.SendUserConfirmation(createdUser.Id, appKey);
 
             return _mapper.Map<UserGetDTO>(createdUser);
         }
 
-
-        // TODO: put only communication with external service in the job, separate this to UserConfirmationAppService
-        private void SendUserConfirmation(int userId, string appKey)
-        {
-            BackgroundJob.Enqueue(() => _emailService.SendUserConfirmationJob(userId, appKey));
-            Console.WriteLine("Job was sent to queue!");
-        }
     }
 }
