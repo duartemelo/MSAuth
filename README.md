@@ -20,15 +20,17 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] AutoMapper
 - [ ] All DTO mappings
 - [ ] Migrate creating/updating/returning/deleting objects to Domain Services, and leave inter-entity business rules to AppServices
-- [ ] Email service + hangfire
+- [X] Email service (mocked) + hangfire
 - [X] Install and simple example of Hangfire
 - [ ] Implement all endpoints
 - [ ] JWT Authentication
-- [ ] Docker containerization
+- [ ] Docker containerization (WIP)
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
 
-## Run the project (UNDER DEVELOPMENT)
+## Run the project
+
+👨‍💻 **UNDER DEVELOPMENT**
 
 Run commands:  
 ```bash
