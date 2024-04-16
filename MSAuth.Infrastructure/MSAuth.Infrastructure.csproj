@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MSAuth.Application\MSAuth.Application.csproj" />
     <ProjectReference Include="..\MSAuth.Domain\MSAuth.Domain.csproj" />
   </ItemGroup>
 

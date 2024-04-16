@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using MSAuth.Application.Interfaces;
+using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 
@@ -9,11 +10,13 @@ namespace MSAuth.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserConfirmationService _userConfirmationService;
+        private readonly IEmailService _emailService;
 
-        public UserConfirmationAppService(IUnitOfWork unitOfWork, IUserConfirmationService userConfirmationService)
+        public UserConfirmationAppService(IUnitOfWork unitOfWork, IUserConfirmationService userConfirmationService, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _userConfirmationService = userConfirmationService;
+            _emailService = emailService;
         }
 
         public async void SendUserConfirmation(int userId, string appKey)
@@ -30,7 +33,7 @@ namespace MSAuth.Application.Services
         [AutomaticRetry(Attempts = 5)]
         public async Task SendUserConfirmationJob(int userId, string userEmail, string appKey)
         {
-            var emailResult = await SendEmailMock(userEmail);
+            var emailResult = await _emailService.Send(userEmail);
             if (emailResult == true)
             {
                 await CreateUserConfirmationAsync(userId, appKey);
@@ -47,14 +50,6 @@ namespace MSAuth.Application.Services
                 return;
 
             _userConfirmationService.CreateUserConfirmation(user);
-        }
-
-        // TODO: separate email communication to infra
-        private static async Task<bool> SendEmailMock(string userEmail)
-        {
-            await Task.Delay(40000);
-            Console.WriteLine("Email was sent! " + userEmail);
-            return true;
         }
     }
 }
