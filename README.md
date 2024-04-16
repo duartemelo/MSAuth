@@ -27,3 +27,11 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [ ] Docker containerization
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
+
+## Run the project (UNDER DEVELOPMENT)
+
+Run commands:  
+```bash
+docker build -t msauth .
+docker run -p 8080:8080 msauth
+```
