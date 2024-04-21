@@ -42,7 +42,7 @@ namespace MSAuth.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Apps");
+                    b.ToTable("Apps", (string)null);
                 });
 
             modelBuilder.Entity("MSAuth.Domain.Entities.UserConfirmation", b =>
@@ -76,7 +76,7 @@ namespace MSAuth.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserConfirmations");
+                    b.ToTable("UserConfirmations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
