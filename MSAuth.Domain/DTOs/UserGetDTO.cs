@@ -2,7 +2,7 @@
 {
     public class UserGetDTO
     {
-        public int Id { get; set; }
+        public string? Id { get; set; }
         public string? ExternalId { get; set; }
         public string? Email { get; set; }
         public DateTime DateOfRegister { get; set; }

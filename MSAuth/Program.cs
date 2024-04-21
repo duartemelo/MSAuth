@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using Hangfire;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Interfaces;
@@ -8,6 +9,7 @@ using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
+using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
@@ -40,6 +42,16 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // TODO: configure?
+    // Configure suas opções de segurança do Identity aqui, se necessário
+});
 
 // Add Notification
 builder.Services.AddScoped<NotificationContext>();

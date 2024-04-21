@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSAuth.API.Extensions;
-using MSAuth.Application.Services;
+using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
@@ -11,11 +11,11 @@ namespace MSAuth.API.Controllers
     [Route("api/[controller]")]
     public class AppController : Controller
     {
-        private readonly AppAppService _appService;
+        private readonly IAppAppService _appService;
         private readonly NotificationContext _notificationContext;
         private readonly ModelErrorsContext _modelErrorsContext;
 
-        public AppController(AppAppService appService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
+        public AppController(IAppAppService appService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
         {
             _appService = appService;
             _notificationContext = notificationContext;

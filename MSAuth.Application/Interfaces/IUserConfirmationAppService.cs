@@ -2,8 +2,8 @@
 {
     public interface IUserConfirmationAppService
     {
-        Task CreateUserConfirmationAsync(int userId, string appKey);
-        void SendUserConfirmation(int userId, string appKey);
-        Task SendUserConfirmationJob(int userId, string userEmail, string appKey);
+        Task CreateUserConfirmationAsync(string userId, string appKey);
+        void SendUserConfirmation(string userId, string appKey);
+        Task SendUserConfirmationJob(string userId, string userEmail, string appKey);
     }
 }

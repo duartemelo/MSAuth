@@ -1,30 +1,25 @@
-﻿using MSAuth.Domain.Utils;
-using static MSAuth.Domain.Utils.PasswordGeneration;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace MSAuth.Domain.Entities
 {
-    public class User : BaseEntity
+    public class User : IdentityUser
     {
         public string? ExternalId { get; set; }
         public App? App { get; set; }
-        public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
-        public string? PasswordSalt { get; set; }
+        public DateTime? DateOfRegister { get; set; }
+        public DateTime? DateOfModification { get; set; }
         public DateTime? DateOfLastAccess { get; set; }
 
         // Construtor necessário para EF
         private User()
         {
         }
-
-        public User(string externalId, App app, string email, string password)
+        public User(string externalId, App app, string email)
         {
             ExternalId = externalId;
             App = app;
+            UserName = email;
             Email = email;
-            Password generatedPassword = GeneratePassword(password);
-            PasswordHash = generatedPassword.hash;
-            PasswordSalt = generatedPassword.salt;
         }
     }
 }

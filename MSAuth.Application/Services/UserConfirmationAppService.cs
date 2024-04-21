@@ -19,7 +19,7 @@ namespace MSAuth.Application.Services
             _emailService = emailService;
         }
 
-        public async void SendUserConfirmation(int userId, string appKey)
+        public async void SendUserConfirmation(string userId, string appKey)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
 
@@ -31,7 +31,7 @@ namespace MSAuth.Application.Services
         }
 
         [AutomaticRetry(Attempts = 5)]
-        public async Task SendUserConfirmationJob(int userId, string userEmail, string appKey)
+        public async Task SendUserConfirmationJob(string userId, string userEmail, string appKey)
         {
             var emailResult = await _emailService.Send(userEmail);
             if (emailResult == true)
@@ -42,7 +42,7 @@ namespace MSAuth.Application.Services
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task CreateUserConfirmationAsync(int userId, string appKey)
+        public async Task CreateUserConfirmationAsync(string userId, string appKey)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
 

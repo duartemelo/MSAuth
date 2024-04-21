@@ -2,6 +2,7 @@
 using MSAuth.API.ActionFilters;
 using MSAuth.API.Extensions;
 using MSAuth.API.Utils;
+using MSAuth.Application.Interfaces;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.ModelErrors;
@@ -14,10 +15,10 @@ namespace MSAuth.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly UserAppService _userService;
+        private readonly IUserAppService _userService;
         private readonly NotificationContext _notificationContext;
         private readonly ModelErrorsContext _modelErrorsContext;
-        public UserController(UserAppService userService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
+        public UserController(IUserAppService userService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
         {
             _userService = userService;
             _notificationContext = notificationContext;
@@ -25,7 +26,7 @@ namespace MSAuth.API.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        public async Task<IActionResult> GetUserById(string userId)
         {
             var user = await _userService.GetUserByIdAsync(userId, AppKey.GetAppKey(HttpContext));
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
