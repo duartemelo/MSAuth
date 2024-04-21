@@ -4,6 +4,7 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Interfaces;
+using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
@@ -14,6 +15,7 @@ using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
 using MSAuth.Domain.Validators;
 using MSAuth.Infrastructure.Data;
+using MSAuth.Infrastructure.Services;
 using MSAuth.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,9 +62,12 @@ builder.Services.AddScoped<IValidator<UserCreateDTO>, UserCreateDTOValidator>();
 builder.Services.AddScoped<EntityValidationService>();
 
 // Add App Services
-builder.Services.AddScoped<IUserAppService ,UserAppService>();
-builder.Services.AddScoped<IAppAppService ,AppAppService>();
+builder.Services.AddScoped<IUserAppService, UserAppService>();
+builder.Services.AddScoped<IAppAppService, AppAppService>();
 builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppService>();
+
+// Add Infrastructure Services
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
