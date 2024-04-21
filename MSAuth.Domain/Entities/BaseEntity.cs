@@ -10,7 +10,7 @@ namespace MSAuth.Domain.Entities
     {
         public int Id { get; set; }
         public DateTime DateOfCreation { get; set; }
-        public DateTime DateOfModification {  get; set; }
+        public DateTime? DateOfModification {  get; set; }
 
         public BaseEntity() {}
     }
