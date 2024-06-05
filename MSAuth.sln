@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSAuth.API", "MSAuth\MSAuth.API.csproj", "{D6FE42F2-F3D3-4AA8-8BF0-D95BED3591DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSAuth.API", "MSAuth\MSAuth.API.csproj", "{D6FE42F2-F3D3-4AA8-8BF0-D95BED3591DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSAuth.Domain", "MSAuth.Domain\MSAuth.Domain.csproj", "{46C318ED-353C-42BA-89CB-FEA2A1088573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSAuth.Domain", "MSAuth.Domain\MSAuth.Domain.csproj", "{46C318ED-353C-42BA-89CB-FEA2A1088573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSAuth.Infrastructure", "MSAuth.Infrastructure\MSAuth.Infrastructure.csproj", "{7FA4FD4D-EA86-476B-9B13-CAFA61454F76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSAuth.Infrastructure", "MSAuth.Infrastructure\MSAuth.Infrastructure.csproj", "{7FA4FD4D-EA86-476B-9B13-CAFA61454F76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSAuth.Application", "MSAuth.Application\MSAuth.Application.csproj", "{2E682DC5-2850-4F19-9092-3AE25BC74A59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSAuth.Application", "MSAuth.Application\MSAuth.Application.csproj", "{2E682DC5-2850-4F19-9092-3AE25BC74A59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{770078EE-BD84-4C4C-BF1F-184F2732FB7A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

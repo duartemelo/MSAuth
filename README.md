@@ -25,7 +25,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [ ] Implement all endpoints
 - [ ] Use ASP.NET Identity (WIP)
 - [ ] JWT Authentication
-- [ ] Docker containerization (WIP)
+- [X] Docker containerization
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
 
