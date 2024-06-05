@@ -16,7 +16,12 @@ namespace MSAuth.Infrastructure.Repositories
 
         public async Task<User?> GetByIdAsync(string userId, string appKey)
         {
-            return await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.App != null && u.App.AppKey == appKey);
+            return await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.App.AppKey == appKey);
+        }
+
+        public async Task<User?> GetByExternalIdAsync(string externalId, string appKey)
+        {
+            return await _context.AppUsers.FirstOrDefaultAsync(u => u.ExternalId == externalId && u.App.AppKey == appKey);
         }
 
         public async Task<User?> GetByEmailAsync(string email)
@@ -24,9 +29,9 @@ namespace MSAuth.Infrastructure.Repositories
             return await _context.AppUsers.FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task<Boolean> GetUserExistsSameAppByEmail(string email, string appKey)
+        public async Task<Boolean> GetUserExistsSameApp(string email, string externalId, string appKey)
         {
-            return await _context.AppUsers.AnyAsync(user => user.Email == email && user.App != null && user.App.AppKey == appKey);
+            return await _context.AppUsers.AnyAsync(user => user.App.AppKey == appKey && (user.Email == email || user.ExternalId == externalId));
         }
     }
 }

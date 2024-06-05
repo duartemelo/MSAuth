@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
+using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 
@@ -19,14 +20,9 @@ namespace MSAuth.Application.Services
             _emailService = emailService;
         }
 
-        public async void SendUserConfirmation(string userId, string appKey)
+        public void SendUserConfirmation(User user, string appKey)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
-
-            if (user == null || user.Email == null)
-                return;
-
-            BackgroundJob.Enqueue(() => SendUserConfirmationJob(userId, user.Email, appKey));
+            BackgroundJob.Enqueue(() => SendUserConfirmationJob(user.Id, user.Email!, appKey));
             Console.WriteLine("Job was sent to queue!");
         }
 

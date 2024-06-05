@@ -32,7 +32,12 @@ namespace MSAuth.API.Controllers
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
         }
 
-        // TODO: GetUserByExternalId
+        [HttpGet("ExternalId/{externalId}")]
+        public async Task<IActionResult> GetUserByExternalId(string externalId)
+        {
+            var user = await _userService.GetUserByExternalIdAsync(externalId, AppKey.GetAppKey(HttpContext));
+            return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);
+        }
 
         [HttpPost]
         public async Task<IActionResult> PostUser(UserCreateDTO user)

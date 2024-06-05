@@ -37,6 +37,16 @@ namespace MSAuth.Application.Services
             return _mapper.Map<UserGetDTO>(user);
         }
 
+        public async Task<UserGetDTO?> GetUserByExternalIdAsync(string externalId, string appKey)
+        {
+            var user = await _unitOfWork.UserRepository.GetByExternalIdAsync(externalId, appKey);
+            if (user == null)
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);
+            }
+            return _mapper.Map<UserGetDTO>(user);
+        }
+
         public async Task<UserGetDTO?> CreateUserAsync(UserCreateDTO user, string appKey)
         {
             var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
@@ -46,7 +56,7 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            var userExists = await _unitOfWork.UserRepository.GetUserExistsSameAppByEmail(user.Email, appKey);
+            var userExists = await _unitOfWork.UserRepository.GetUserExistsSameApp(user.Email, user.ExternalId, appKey);
             if (userExists)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
@@ -58,7 +68,7 @@ namespace MSAuth.Application.Services
             if (createdUser == null)
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
             else
-                _userConfirmationAppService.SendUserConfirmation(createdUser.Id, appKey);
+                _userConfirmationAppService.SendUserConfirmation(createdUser, appKey);
 
             return _mapper.Map<UserGetDTO>(createdUser);
         }

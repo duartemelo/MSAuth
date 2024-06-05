@@ -6,6 +6,7 @@ namespace MSAuth.Domain.Interfaces.Repositories
     {
         Task<User?> GetByIdAsync(string userId, string appKey);
         Task<User?> GetByEmailAsync(string email);
-        Task<bool> GetUserExistsSameAppByEmail(string email, string appKey);
+        Task<Boolean> GetUserExistsSameApp(string email, string externalId, string appKey);
+        Task<User?> GetByExternalIdAsync(string externalId, string appKey);
     }
 }

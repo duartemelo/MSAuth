@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
-using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
 
 namespace MSAuth.Domain.Services
@@ -41,7 +40,6 @@ namespace MSAuth.Domain.Services
 
             var result = await _userManager.CreateAsync(user, userToCreate.Password);
 
-            // TODO: fix? refactor?
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
