@@ -33,8 +33,4 @@ This microservice enables the creation of apps, each with its unique app key, wh
 
 👨‍💻 **UNDER DEVELOPMENT**
 
-Run commands:  
-```bash
-docker build -t msauth .
-docker run -p 8080:8080 msauth
-```
+Open the project with Visual Studio and run it using Docker :)
