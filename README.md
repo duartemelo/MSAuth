@@ -19,12 +19,12 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Add FluentValidation to simplify model validation
 - [X] AutoMapper
 - [ ] All DTO mappings
-- [ ] Migrate creating/updating/returning/deleting objects to Domain Services, and leave inter-entity business rules to AppServices
 - [X] Email service (mocked) + hangfire
 - [X] Install and simple example of Hangfire
 - [ ] Implement all endpoints
-- [ ] Use ASP.NET Identity (WIP)
-- [ ] JWT Authentication
+- [X] Use ASP.NET Identity
+- [X] JSON Web Tokens (JWT) generation
+- [ ] Refresh tokens
 - [X] Docker containerization
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
