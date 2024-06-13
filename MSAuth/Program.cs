@@ -1,8 +1,10 @@
 using AutoMapper;
 using FluentValidation;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MSAuth.API.ActionFilters;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
@@ -49,8 +51,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // TODO: configure?
-    // Configure suas opções de segurança do Identity aqui, se necessário
+    // Configure your Identity security options here, if needed
 });
 
 // Add Notification
@@ -79,7 +80,7 @@ builder.Services.AddScoped<IAppAppService, AppAppService>();
 builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppService>();
 
 // Add Infrastructure Services
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, MockedEmailService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

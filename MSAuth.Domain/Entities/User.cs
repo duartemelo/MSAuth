@@ -4,7 +4,6 @@ namespace MSAuth.Domain.Entities
 {
     public class User : IdentityUser
     {
-        public string ExternalId { get; set; }
         public App App { get; set; }
         public DateTime DateOfRegister { get; set; }
         public DateTime? DateOfModification { get; set; }
@@ -14,9 +13,8 @@ namespace MSAuth.Domain.Entities
         private User()
         {
         }
-        public User(string externalId, App app, string email)
+        public User(App app, string email)
         {
-            ExternalId = externalId;
             App = app;
             UserName = email;
             Email = email;

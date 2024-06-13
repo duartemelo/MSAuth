@@ -14,12 +14,12 @@ namespace MSAuth.API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IUserAppService _userService;
+        private readonly IUserAppService _userAppService;
         private readonly NotificationContext _notificationContext;
         private readonly ModelErrorsContext _modelErrorsContext;
-        public UserController(IUserAppService userService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
+        public UserController(IUserAppService userAppService, NotificationContext notificationContext, ModelErrorsContext modelErrorsContext)
         {
-            _userService = userService;
+            _userAppService = userAppService;
             _notificationContext = notificationContext;
             _modelErrorsContext = modelErrorsContext;
         }
@@ -27,21 +27,21 @@ namespace MSAuth.API.Controllers
         [HttpGet("InternalId/{id}")]
         public async Task<IActionResult> GetUserByInternalId(string id)
         {
-            var user = await _userService.GetUserByIdAsync(id, AppKey.GetAppKey(HttpContext));
+            var user = await _userAppService.GetUserByIdAsync(id, AppKey.GetAppKey(HttpContext));
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
         }
 
-        [HttpGet("ExternalId/{id}")]
-        public async Task<IActionResult> GetUserByExternalId(string id)
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginUser(UserLoginDTO user)
         {
-            var user = await _userService.GetUserByExternalIdAsync(id, AppKey.GetAppKey(HttpContext));
-            return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);
+            var result = await _userAppService.Login(user, AppKey.GetAppKey(HttpContext));
+            return DomainResult<string?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> PostUser(UserCreateDTO user)
         {
-            var createdUser = await _userService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
+            var createdUser = await _userAppService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
             return DomainResult<UserGetDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
         }
     }

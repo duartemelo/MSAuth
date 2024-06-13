@@ -6,5 +6,6 @@ namespace MSAuth.Domain.Interfaces.Services
     public interface IUserService
     {
         Task<User?> CreateUserAsync(UserCreateDTO userToCreate, App app);
+        string GenerateTokenString(User existentUser);
     }
 }

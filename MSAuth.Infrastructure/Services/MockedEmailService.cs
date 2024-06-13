@@ -2,7 +2,7 @@
 
 namespace MSAuth.Infrastructure.Services
 {
-    public class EmailService : IEmailService
+    public class MockedEmailService : IEmailService
     {
         public async Task<bool> Send(string userEmail)
         {
