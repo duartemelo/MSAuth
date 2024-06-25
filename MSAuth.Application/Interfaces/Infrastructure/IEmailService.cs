@@ -2,6 +2,6 @@
 {
     public interface IEmailService
     {
-        Task<bool> Send(string userEmail);
+        Task<bool> Send(string userEmail, string userConfirmationToken);
     }
 }
