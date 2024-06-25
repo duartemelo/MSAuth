@@ -32,5 +32,5 @@ This microservice enables the creation of apps, each with its unique app key, wh
 
 👨‍💻 **UNDER DEVELOPMENT**
 
-Open the project with Visual Studio and run it using Docker :)  
+Open the project with Visual Studio, setup your connection strings at appsettigs.json, and run it using Docker :)  
 If you can't connect to your SQL Server database, you might need to do this: https://vivekcek.wordpress.com/2018/06/10/connecting-to-local-or-remote-sql-server-from-docker-container/
