@@ -10,6 +10,6 @@ namespace MSAuth.Domain.Interfaces.Services
 {
     public interface IAppService
     {
-        App CreateApp();
+        Task<App> CreateApp();
     }
 }

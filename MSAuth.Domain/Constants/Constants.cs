@@ -17,6 +17,11 @@ namespace MSAuth.Domain.Constants
             public static readonly string INVALID_USER_CREDENTIALS = "INVALID_USER_CREDENTIALS";
             public static readonly string ENTITY_VALIDATION_ERROR = "ENTITY_VALIDATION_ERROR";
             public static readonly string DATABASE_COMMIT_ERROR = "DATABASE_COMMIT_ERROR";
+            public static readonly string USER_CONFIRMATION_NOT_FOUND = "USER_CONFIRMATION_NOT_FOUND";
+            public static readonly string USER_CONFIRMATION_EXPIRED = "USER_CONFIRMATION_EXPIRED";
+            public static readonly string USER_IS_NOT_CONFIRMED = "USER_IS_NOT_CONFIRMED";
+            public static readonly string USER_CONFIRMATION_ALREADY_EXISTS = "USER_CONFIRMATION_ALREADY_EXISTS";
+            public static readonly string USER_IS_ALREADY_CONFIRMED = "USER_IS_ALREADY_CONFIRMED";
         }
     }
 }

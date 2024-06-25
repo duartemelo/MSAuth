@@ -18,7 +18,6 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Model Error Filter
 - [X] Add FluentValidation to simplify model validation
 - [X] AutoMapper
-- [ ] All DTO mappings
 - [X] Email service (mocked) + hangfire
 - [X] Install and simple example of Hangfire
 - [ ] Implement all endpoints

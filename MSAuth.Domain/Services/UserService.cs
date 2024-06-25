@@ -1,14 +1,19 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
+using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
+using MSAuth.Domain.Notifications;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
+using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Domain.Services
 {
@@ -18,10 +23,12 @@ namespace MSAuth.Domain.Services
         private readonly EntityValidationService _entityValidationService;
         private readonly UserManager<User> _userManager;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly NotificationContext _notificationContext;
         private readonly ModelErrorsContext _modelErrorsContext;
         private readonly IConfiguration _configuration;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IValidator<UserCreateDTO> userCreateDTOValidator, ModelErrorsContext modelErrorsContext, EntityValidationService entityValidationService, UserManager<User> userManager, IPasswordHasher<User> passwordHasher, IConfiguration configuration)
+        public UserService(IValidator<UserCreateDTO> userCreateDTOValidator, ModelErrorsContext modelErrorsContext, EntityValidationService entityValidationService, UserManager<User> userManager, IPasswordHasher<User> passwordHasher, IConfiguration configuration, NotificationContext notificationContext, IUnitOfWork unitOfWork)
         {
             _userCreateDTOValidator = userCreateDTOValidator;
             _modelErrorsContext = modelErrorsContext;
@@ -29,6 +36,8 @@ namespace MSAuth.Domain.Services
             _userManager = userManager;
             _passwordHasher = passwordHasher;
             _configuration = configuration;
+            _notificationContext = notificationContext;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<User?> CreateUserAsync(UserCreateDTO userToCreate, App app)
@@ -36,6 +45,13 @@ namespace MSAuth.Domain.Services
             var validationResult = _entityValidationService.Validate(_userCreateDTOValidator, userToCreate);
             if (!validationResult)
             {
+                return null;
+            }
+
+            var userExists = await _unitOfWork.UserRepository.GetUserExistsSameApp(userToCreate.Email, app.AppKey);
+            if (userExists)
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
                 return null;
             }
 
@@ -80,6 +96,13 @@ namespace MSAuth.Domain.Services
 
             string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
             return token;
+        }
+
+        public async Task<bool> ValidateUserIsConfirmed(User existentUser)
+        {
+            var confirmation = await _unitOfWork.UserConfirmationRepository.GetEntity().Where(x => x.User == existentUser && x.DateOfConfirm != null).FirstOrDefaultAsync();
+
+            return confirmation != null;
         }
     }
 }

@@ -4,6 +4,7 @@ namespace MSAuth.Domain.Interfaces.Services
 {
     public interface IUserConfirmationService
     {
-        UserConfirmation? CreateUserConfirmation(User user);
+        Task<UserConfirmation> CreateUserConfirmationAsync(User user);
+        Task<bool> Confirm(string token, App app);
     }
 }

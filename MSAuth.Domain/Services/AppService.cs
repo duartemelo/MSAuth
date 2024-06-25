@@ -13,10 +13,10 @@ namespace MSAuth.Domain.Services
             _unitOfWork = unitOfWork;
         }
 
-        public App CreateApp()
+        public async Task<App> CreateApp()
         {
             var app = new App();
-            return _unitOfWork.AppRepository.Add(app);
+            return await _unitOfWork.AppRepository.AddAsync(app);
         }
     }
 }

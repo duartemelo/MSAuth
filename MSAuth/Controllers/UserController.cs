@@ -31,6 +31,11 @@ namespace MSAuth.API.Controllers
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
         }
 
+        /// <summary>
+        /// Generates JWT token based on user email and password
+        /// </summary>
+        /// <param name="user">User email and password</param>
+        /// <returns>JWT Token</returns>
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser(UserLoginDTO user)
         {
@@ -42,7 +47,7 @@ namespace MSAuth.API.Controllers
         public async Task<IActionResult> PostUser(UserCreateDTO user)
         {
             var createdUser = await _userAppService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
-            return DomainResult<UserGetDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
+            return DomainResult<UserCreateResponseDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
         }
     }
 }

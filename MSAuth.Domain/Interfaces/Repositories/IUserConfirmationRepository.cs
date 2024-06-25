@@ -9,5 +9,6 @@ namespace MSAuth.Domain.Interfaces.Repositories
 {
     public interface IUserConfirmationRepository : IBaseRepository<UserConfirmation>
     {
+        Task<UserConfirmation?> GetByTokenAsync(string token, App app);
     }
 }

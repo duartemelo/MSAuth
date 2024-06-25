@@ -15,10 +15,14 @@ namespace MSAuth.Infrastructure.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public T Add(T entity)
+        public IQueryable<T> GetEntity() { 
+            return _dbSet.AsQueryable();
+        }
+
+        public async Task<T> AddAsync(T entity)
         {
             entity.DateOfCreation = DateTime.Now;
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
             return entity;
         }
 

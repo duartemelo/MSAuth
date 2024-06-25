@@ -5,7 +5,6 @@ using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
-using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using static MSAuth.Domain.Constants.Constants;
 
@@ -15,19 +14,19 @@ namespace MSAuth.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
-        private readonly IUserConfirmationAppService _userConfirmationAppService;
         private readonly UserManager<User> _userManager;
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
+        private readonly IUserConfirmationService _userConfirmationService;
 
-        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationAppService userConfirmationAppService, UserManager<User> userManager)
+        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, UserManager<User> userManager, IUserConfirmationService userConfirmationService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
             _notificationContext = notificationContext;
             _mapper = mapper;
-            _userConfirmationAppService = userConfirmationAppService;
             _userManager = userManager;
+            _userConfirmationService = userConfirmationService;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(string userId, string appKey)
@@ -40,30 +39,34 @@ namespace MSAuth.Application.Services
             return _mapper.Map<UserGetDTO>(user);
         }
 
-        public async Task<UserGetDTO?> CreateUserAsync(UserCreateDTO user, string appKey)
+        public async Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user, string appKey)
         {
             var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
             if (app == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
                 return null;
-            }
+            } 
 
-            var userExists = await _unitOfWork.UserRepository.GetUserExistsSameApp(user.Email, appKey);
-            if (userExists)
+            var createdUser = await _userService.CreateUserAsync(user, app);
+            if (createdUser == null)
             {
-                _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
                 return null;
             }
 
-            var createdUser = await _userService.CreateUserAsync(user, app);
-
-            if (createdUser == null)
+            var userConfirmation = await _userConfirmationService.CreateUserConfirmationAsync(createdUser);
+            
+            if (!await _unitOfWork.CommitAsync())
+            {
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
-            else
-                _userConfirmationAppService.SendUserConfirmation(createdUser, appKey);
+                return null;
+            }
 
-            return _mapper.Map<UserGetDTO>(createdUser);
+            var response = _mapper.Map<UserCreateResponseDTO>(createdUser);
+            response.ConfirmationToken = userConfirmation.Token;
+
+            return response;
         }
 
         public async Task<string?> Login(UserLoginDTO user, string appKey)
@@ -80,6 +83,12 @@ namespace MSAuth.Application.Services
             if (existentUser == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);
+                return null;
+            }
+
+            if (!await _userService.ValidateUserIsConfirmed(existentUser))
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_IS_NOT_CONFIRMED, string.Empty);
                 return null;
             }
 

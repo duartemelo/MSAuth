@@ -8,6 +8,7 @@ namespace MSAuth.Application.Mappings
     {
         public UserMappingProfile() {
             CreateMap<User, UserGetDTO>();
+            CreateMap<User, UserCreateResponseDTO>();
         }
     }
 }
