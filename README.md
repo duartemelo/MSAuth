@@ -23,7 +23,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [ ] Implement all endpoints
 - [X] Use ASP.NET Identity
 - [X] JSON Web Tokens (JWT) generation
-- [ ] Refresh tokens
+- [X] Refresh token
 - [X] Docker containerization
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
