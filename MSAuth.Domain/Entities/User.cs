@@ -8,6 +8,8 @@ namespace MSAuth.Domain.Entities
         public DateTime DateOfRegister { get; set; }
         public DateTime? DateOfModification { get; set; }
         public DateTime? DateOfLastAccess { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpire { get; set; }
 
         // Construtor necessário para EF
         private User()
@@ -18,6 +20,12 @@ namespace MSAuth.Domain.Entities
             App = app;
             UserName = email;
             Email = email;
+        }
+
+        public void UpdateRefreshToken(string refreshToken, int expiresHours)
+        {
+            RefreshToken = refreshToken;
+            RefreshTokenExpire = DateTime.UtcNow.AddHours(expiresHours);
         }
     }
 }

@@ -6,6 +6,7 @@ namespace MSAuth.Application.Interfaces
     {
         Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user, string appKey);
         Task<UserGetDTO?> GetUserByIdAsync(string userId, string appKey);
-        Task<string?> Login(UserLoginDTO user, string appKey);
+        Task<UserLoginResponseDTO?> Login(UserLoginDTO user, string appKey);
+        Task<UserLoginResponseDTO?> Refresh(string refreshToken, string v);
     }
 }

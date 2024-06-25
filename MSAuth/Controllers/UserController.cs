@@ -40,7 +40,7 @@ namespace MSAuth.API.Controllers
         public async Task<IActionResult> LoginUser(UserLoginDTO user)
         {
             var result = await _userAppService.Login(user, AppKey.GetAppKey(HttpContext));
-            return DomainResult<string?>.Ok(result, _notificationContext, _modelErrorsContext);
+            return DomainResult<UserLoginResponseDTO?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
 
         [HttpPost("Register")]
@@ -48,6 +48,13 @@ namespace MSAuth.API.Controllers
         {
             var createdUser = await _userAppService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
             return DomainResult<UserCreateResponseDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
+        }
+
+        [HttpGet("Refresh/{refreshToken}")]
+        public async Task<IActionResult> RefreshUser(string refreshToken)
+        {
+            var result = await _userAppService.Refresh(refreshToken, AppKey.GetAppKey(HttpContext));
+            return DomainResult<UserLoginResponseDTO?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
     }
 }

@@ -75,5 +75,12 @@ namespace MSAuth.Domain.Services
 
             return confirmation != null;
         }
+
+        public void UpdateRefreshToken(User user, string refreshToken)
+        {
+            int expiresHoursRefreshToken = int.Parse(_configuration.GetSection("RefreshToken:ExpiresHours").Value!);
+            user.UpdateRefreshToken(refreshToken, expiresHoursRefreshToken);
+            _unitOfWork.UserRepository.Update(user);
+        }
     }
 }

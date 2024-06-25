@@ -72,7 +72,7 @@ namespace MSAuth.Application.Services
             return response;
         }
 
-        public async Task<string?> Login(UserLoginDTO user, string appKey)
+        public async Task<UserLoginResponseDTO?> Login(UserLoginDTO user, string appKey)
         {
             var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
             if (app == null)
@@ -95,14 +95,57 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            if (await _userManager.CheckPasswordAsync(existentUser, user.Password))
+            if (!await _userManager.CheckPasswordAsync(existentUser, user.Password))
             {
-                var token = _tokenService.GenerateToken(existentUser);
-                return token;
+                _notificationContext.AddNotification(NotificationKeys.INVALID_USER_CREDENTIALS, string.Empty);
+                return null;
             }
 
-            _notificationContext.AddNotification(NotificationKeys.INVALID_USER_CREDENTIALS, string.Empty);
-            return null;
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            var token = _tokenService.GenerateToken(existentUser);
+
+            _userService.UpdateRefreshToken(existentUser, refreshToken);
+
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                return null;
+            }
+
+            return new()
+            {
+                Token = token,
+                RefreshToken = refreshToken
+            };
+        }
+
+        public async Task<UserLoginResponseDTO?> Refresh(string refreshToken, string appKey)
+        {
+            // TODO: Implement caching?
+
+            var existentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken, appKey);
+            if (existentUser == null)
+            {
+                _notificationContext.AddNotification(NotificationKeys.INVALID_REFRESH_TOKEN, string.Empty);
+                return null;
+            }
+
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newToken = _tokenService.GenerateToken(existentUser);
+
+            _userService.UpdateRefreshToken(existentUser, newRefreshToken);
+
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                return null;
+            }
+
+            return new()
+            {
+                Token = newToken,
+                RefreshToken = newRefreshToken
+            };
         }
     }
 }

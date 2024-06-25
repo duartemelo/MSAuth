@@ -22,6 +22,7 @@ namespace MSAuth.Domain.Constants
             public static readonly string USER_IS_NOT_CONFIRMED = "USER_IS_NOT_CONFIRMED";
             public static readonly string USER_CONFIRMATION_ALREADY_EXISTS = "USER_CONFIRMATION_ALREADY_EXISTS";
             public static readonly string USER_IS_ALREADY_CONFIRMED = "USER_IS_ALREADY_CONFIRMED";
+            public static readonly string INVALID_REFRESH_TOKEN = "INVALID_REFRESH_TOKEN";
         }
     }
 }

@@ -28,5 +28,16 @@ namespace MSAuth.Infrastructure.Repositories
         {
             return await _context.AppUsers.AnyAsync(user => user.App.AppKey == appKey && user.Email == email);
         }
+
+        public void Update(User user)
+        {
+            user.DateOfModification = DateTime.Now;
+            _context.Entry(user).State = EntityState.Modified;
+        }
+
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken, string appKey)
+        {
+            return await _context.AppUsers.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken && user.RefreshTokenExpire > DateTime.UtcNow && user.App.AppKey == appKey);
+        }
     }
 }

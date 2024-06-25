@@ -39,5 +39,10 @@ namespace MSAuth.Infrastructure.Services
             string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
             return token;
         }
+
+        public string GenerateRefreshToken()
+        {
+            return Guid.NewGuid().ToString();
+        }
     }
 }
