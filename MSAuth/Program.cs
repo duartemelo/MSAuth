@@ -81,6 +81,7 @@ builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppServi
 
 // Add Infrastructure Services
 builder.Services.AddScoped<IEmailService, MockedEmailService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

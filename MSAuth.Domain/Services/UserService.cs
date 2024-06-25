@@ -2,17 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Text;
 using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Domain.Services
@@ -72,30 +67,6 @@ namespace MSAuth.Domain.Services
             }
 
             return result.Succeeded ? user : null;
-        }
-
-        public string GenerateTokenString(User user)
-        {
-            IEnumerable<Claim> claims = new List<Claim> 
-            {
-                new(ClaimTypes.Email, user.Email!)
-            };
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value!));
-
-            SigningCredentials signingCredential = new(
-                securityKey,
-                SecurityAlgorithms.HmacSha512Signature);
-
-            var securityToken = new JwtSecurityToken(
-                claims:claims,
-                expires: DateTime.Now.AddMinutes(Double.Parse(_configuration.GetSection("Jwt:ExpiresMin").Value!)),
-                issuer: _configuration.GetSection("Jwt:Issuer").Value,
-                audience: _configuration.GetSection("Jwt:Audience").Value,
-                signingCredentials:signingCredential);
-
-            string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            return token;
         }
 
         public async Task<bool> ValidateUserIsConfirmed(User existentUser)

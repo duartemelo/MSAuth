@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MSAuth.Application.Interfaces;
+using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
@@ -18,8 +19,9 @@ namespace MSAuth.Application.Services
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
         private readonly IUserConfirmationService _userConfirmationService;
+        private readonly ITokenService _tokenService;
 
-        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, UserManager<User> userManager, IUserConfirmationService userConfirmationService)
+        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, UserManager<User> userManager, IUserConfirmationService userConfirmationService, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
@@ -27,6 +29,7 @@ namespace MSAuth.Application.Services
             _mapper = mapper;
             _userManager = userManager;
             _userConfirmationService = userConfirmationService;
+            _tokenService = tokenService;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(string userId, string appKey)
@@ -94,7 +97,7 @@ namespace MSAuth.Application.Services
 
             if (await _userManager.CheckPasswordAsync(existentUser, user.Password))
             {
-                var token = _userService.GenerateTokenString(existentUser);
+                var token = _tokenService.GenerateToken(existentUser);
                 return token;
             }
 
