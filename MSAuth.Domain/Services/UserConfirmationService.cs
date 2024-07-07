@@ -38,12 +38,18 @@ namespace MSAuth.Domain.Services
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_CONFIRMATION_EXPIRED, string.Empty);
                 return false;
-            } else
-            {
-                userConfirmation.DateOfConfirm = DateTime.Now;
-                _unitOfWork.UserConfirmationRepository.Update(userConfirmation);
-                return true;
             }
+            
+            if (userConfirmation.IsConfirmed)
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_IS_ALREADY_CONFIRMED, string.Empty);
+                return false;
+            }
+
+            userConfirmation.DateOfConfirm = DateTime.Now;
+            _unitOfWork.UserConfirmationRepository.Update(userConfirmation);
+            return true;
+            
         }
     }
 }

@@ -25,7 +25,7 @@ namespace MSAuth.Application.Services
 
         public async Task<AppCreateDTO> CreateAppAsync()
         {
-            var app = _appService.CreateApp();
+            var app = await _appService.CreateApp();
             if (!await _unitOfWork.CommitAsync())
             {
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);

@@ -15,24 +15,22 @@ namespace MSAuth.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserService _userService;
-        private readonly UserManager<User> _userManager;
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
         private readonly IUserConfirmationService _userConfirmationService;
         private readonly ITokenService _tokenService;
 
-        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, UserManager<User> userManager, IUserConfirmationService userConfirmationService, ITokenService tokenService)
+        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationService userConfirmationService, ITokenService tokenService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
             _notificationContext = notificationContext;
             _mapper = mapper;
-            _userManager = userManager;
             _userConfirmationService = userConfirmationService;
             _tokenService = tokenService;
         }
 
-        public async Task<UserGetDTO?> GetUserByIdAsync(string userId, string appKey)
+        public async Task<UserGetDTO?> GetUserByIdAsync(long userId, string appKey)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
             if (user == null)
@@ -89,13 +87,13 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            if (!await _userService.ValidateUserIsConfirmed(existentUser))
+            if (!existentUser.IsConfirmed)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_IS_NOT_CONFIRMED, string.Empty);
                 return null;
             }
 
-            if (!await _userManager.CheckPasswordAsync(existentUser, user.Password))
+            if (!existentUser.ValidatePassword(user.Password))
             {
                 _notificationContext.AddNotification(NotificationKeys.INVALID_USER_CREDENTIALS, string.Empty);
                 return null;

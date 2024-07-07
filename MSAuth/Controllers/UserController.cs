@@ -25,7 +25,7 @@ namespace MSAuth.API.Controllers
         }
 
         [HttpGet("InternalId/{id}")]
-        public async Task<IActionResult> GetUserByInternalId(string id)
+        public async Task<IActionResult> GetUserByInternalId(long id)
         {
             var user = await _userAppService.GetUserByIdAsync(id, AppKey.GetAppKey(HttpContext));
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         

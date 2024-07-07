@@ -57,8 +57,7 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            var userIsConfimed = await _userService.ValidateUserIsConfirmed(user);
-            if (userIsConfimed)
+            if (user.IsConfirmed)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_IS_ALREADY_CONFIRMED, string.Empty);
                 return null;

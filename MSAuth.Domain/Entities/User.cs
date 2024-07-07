@@ -1,25 +1,37 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MSAuth.Domain.Entities
 {
-    public class User : IdentityUser
+    public class User : BaseEntity
     {
         public App App { get; set; }
-        public DateTime DateOfRegister { get; set; }
-        public DateTime? DateOfModification { get; set; }
+        public string Email { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
+        public string? PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorActivated { get; set; } = false;
+        public int AccessFailedCount { get; set; } = 0;
+        public DateTime? LockoutEnd { get; set; }
         public DateTime? DateOfLastAccess { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpire { get; set; }
+        public ICollection<UserConfirmation> UserConfirmations { get; set; } = new List<UserConfirmation>();
+        public bool IsConfirmed => UserConfirmations.Any(x => x.DateOfConfirm != null);
+
+
 
         // Construtor necessário para EF
         private User()
         {
         }
-        public User(App app, string email)
+        public User(App app, string email, string password)
         {
             App = app;
-            UserName = email;
             Email = email;
+            SetPassword(password);
         }
 
         public void UpdateRefreshToken(string refreshToken, int expiresHours)
@@ -27,5 +39,21 @@ namespace MSAuth.Domain.Entities
             RefreshToken = refreshToken;
             RefreshTokenExpire = DateTime.UtcNow.AddHours(expiresHours);
         }
+
+        public void SetPassword(string password)
+        {
+            using var hmac = new HMACSHA256();
+            PasswordSalt = hmac.Key;
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        }
+
+        public bool ValidatePassword(string password)
+        {
+            using var hmac = new HMACSHA256(PasswordSalt);
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return StructuralComparisons.StructuralEqualityComparer.Equals(computedHash, PasswordHash);
+        }
+
+        
     }
 }

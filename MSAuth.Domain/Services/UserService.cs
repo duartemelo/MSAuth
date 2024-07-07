@@ -16,20 +16,14 @@ namespace MSAuth.Domain.Services
     {
         private readonly IValidator<UserCreateDTO> _userCreateDTOValidator;
         private readonly EntityValidationService _entityValidationService;
-        private readonly UserManager<User> _userManager;
-        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly NotificationContext _notificationContext;
-        private readonly ModelErrorsContext _modelErrorsContext;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IValidator<UserCreateDTO> userCreateDTOValidator, ModelErrorsContext modelErrorsContext, EntityValidationService entityValidationService, UserManager<User> userManager, IPasswordHasher<User> passwordHasher, IConfiguration configuration, NotificationContext notificationContext, IUnitOfWork unitOfWork)
+        public UserService(IValidator<UserCreateDTO> userCreateDTOValidator, EntityValidationService entityValidationService, IConfiguration configuration, NotificationContext notificationContext, IUnitOfWork unitOfWork)
         {
             _userCreateDTOValidator = userCreateDTOValidator;
-            _modelErrorsContext = modelErrorsContext;
             _entityValidationService = entityValidationService;
-            _userManager = userManager;
-            _passwordHasher = passwordHasher;
             _configuration = configuration;
             _notificationContext = notificationContext;
             _unitOfWork = unitOfWork;
@@ -50,23 +44,9 @@ namespace MSAuth.Domain.Services
                 return null;
             }
 
-            var user = new User(app, userToCreate.Email);
+            var user = new User(app, userToCreate.Email, userToCreate.Password);
 
-            var hashedPassword = _passwordHasher.HashPassword(user, userToCreate.Password);
-            user.PasswordHash = hashedPassword;
-            user.DateOfRegister = DateTime.Now;
-
-            var result = await _userManager.CreateAsync(user, userToCreate.Password);
-
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                {
-                    _modelErrorsContext.AddModelError(typeof(UserCreateDTO).Name, error.Code, error.Description);
-                }
-            }
-
-            return result.Succeeded ? user : null;
+            return await _unitOfWork.UserRepository.AddAsync(user);
         }
 
         public async Task<bool> ValidateUserIsConfirmed(User existentUser)

@@ -5,39 +5,33 @@ using MSAuth.Infrastructure.Data;
 
 namespace MSAuth.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<User?> GetByIdAsync(string userId, string appKey)
+        public async Task<User?> GetByIdAsync(long userId, string appKey)
         {
-            return await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId && u.App.AppKey == appKey);
+            return await GetEntity().FirstOrDefaultAsync(u => u.Id == userId && u.App.AppKey == appKey);
         }
 
         public async Task<User?> GetByEmailAsync(string email, string appKey)
         {
-            return await _context.AppUsers.FirstOrDefaultAsync(user => user.Email == email && user.App.AppKey == appKey);
+            return await GetEntity()
+                .Include(x => x.UserConfirmations)
+                .FirstOrDefaultAsync(user => user.Email == email && user.App.AppKey == appKey);
         }
 
         public async Task<Boolean> GetUserExistsSameApp(string email, string appKey)
         {
-            return await _context.AppUsers.AnyAsync(user => user.App.AppKey == appKey && user.Email == email);
-        }
-
-        public void Update(User user)
-        {
-            user.DateOfModification = DateTime.Now;
-            _context.Entry(user).State = EntityState.Modified;
+            return await GetEntity().AnyAsync(user => user.App.AppKey == appKey && user.Email == email);
         }
 
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken, string appKey)
         {
-            return await _context.AppUsers.FirstOrDefaultAsync(user => user.RefreshToken == refreshToken && user.RefreshTokenExpire > DateTime.UtcNow && user.App.AppKey == appKey);
+            return await GetEntity()
+                .FirstOrDefaultAsync(user => user.RefreshToken == refreshToken && user.RefreshTokenExpire > DateTime.UtcNow && user.App.AppKey == appKey);
         }
     }
 }
