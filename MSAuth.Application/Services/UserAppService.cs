@@ -72,13 +72,6 @@ namespace MSAuth.Application.Services
 
         public async Task<UserLoginResponseDTO?> Login(UserLoginDTO user, string appKey)
         {
-            var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
-            if (app == null)
-            {
-                _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
-                return null;
-            }
-
             var existentUser = await _unitOfWork.UserRepository.GetByEmailAsync(user.Email, appKey);
 
             if (existentUser == null)

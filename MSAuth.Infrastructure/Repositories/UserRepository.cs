@@ -23,7 +23,7 @@ namespace MSAuth.Infrastructure.Repositories
                 .FirstOrDefaultAsync(user => user.Email == email && user.App.AppKey == appKey);
         }
 
-        public async Task<Boolean> GetUserExistsSameApp(string email, string appKey)
+        public async Task<bool> GetUserExistsSameApp(string email, string appKey)
         {
             return await GetEntity().AnyAsync(user => user.App.AppKey == appKey && user.Email == email);
         }
