@@ -24,6 +24,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] JSON Web Tokens (JWT) generation
 - [X] Refresh token
 - [X] Docker containerization
+- [ ] Docker compose (WIP)
 - [ ] Create an API Gateway to use multiple MS
 - [ ] Create a front-end to consume the back-end services
 
