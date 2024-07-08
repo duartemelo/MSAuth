@@ -20,7 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSAuth", "MSAuth", "{AB8246
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBarber", "MSBarber", "{8957E660-0047-4D24-B9B4-6F71BA504E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBarber.API", "MSBarber.API\MSBarber.API.csproj", "{176C5B14-5CB7-4A16-9BA3-A0C478034427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSBarber.API", "MSBarber.API\MSBarber.API.csproj", "{176C5B14-5CB7-4A16-9BA3-A0C478034427}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1B63F912-7377-4E67-A52E-793281FF918F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,10 @@ Global
 		{176C5B14-5CB7-4A16-9BA3-A0C478034427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{176C5B14-5CB7-4A16-9BA3-A0C478034427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{176C5B14-5CB7-4A16-9BA3-A0C478034427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B63F912-7377-4E67-A52E-793281FF918F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B63F912-7377-4E67-A52E-793281FF918F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B63F912-7377-4E67-A52E-793281FF918F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B63F912-7377-4E67-A52E-793281FF918F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

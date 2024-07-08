@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  msauth.api:
+    image: ${DOCKER_REGISTRY-}msauthapi
+    build:
+      context: .
+      dockerfile: MSAuth/Dockerfile
+    ports:
+        - "32773:8080"
+        - "32772:8081"
+  msbarber.api:
+    image: ${DOCKER_REGISTRY-}msbarberapi
+    build:
+      context: .
+      dockerfile: MSBarber.API/Dockerfile
+    ports:
+        - "32775:8080"
+        - "32774:8081"
