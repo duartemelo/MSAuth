@@ -7,13 +7,28 @@ services:
       context: .
       dockerfile: MSAuth/Dockerfile
     ports:
-        - "32773:8080"
-        - "32772:8081"
-  msbarber.api:
-    image: ${DOCKER_REGISTRY-}msbarberapi
+        - "32772:8080"
+        - "32773:8081"
+
+  msgym.api:
+    image: ${DOCKER_REGISTRY-}msgymapi
     build:
       context: .
-      dockerfile: MSBarber.API/Dockerfile
+      dockerfile: Gym/MSGym.API/Dockerfile
     ports:
-        - "32775:8080"
-        - "32774:8081"
+        - "32774:8080"
+        - "32775:8081"
+
+
+  msgamification.api:
+    image: ${DOCKER_REGISTRY-}msgamificationapi
+    build:
+      context: .
+      dockerfile: Gym/MSGamification.API/Dockerfile
+    ports:
+        - "32776:8080"
+        - "32777:8081"
+
+
+
+

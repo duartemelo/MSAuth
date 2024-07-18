@@ -5,7 +5,8 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "msauth.api": "StartDebugging",
-        "msbarber.api": "StartDebugging"
+        "msgamification.api": "StartDebugging",
+        "msgym.api": "StartDebugging"
       }
     }
   }
