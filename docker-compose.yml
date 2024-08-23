@@ -3,32 +3,55 @@ version: '3.4'
 services:
   msauth.api:
     image: ${DOCKER_REGISTRY-}msauthapi
+    container_name: msauth.api
     build:
       context: .
       dockerfile: MSAuth/Dockerfile
     ports:
-        - "32772:8080"
-        - "32773:8081"
+        - 32772:8080
+        - 32773:8081
+    networks:
+        - proxybackend
 
   msgym.api:
     image: ${DOCKER_REGISTRY-}msgymapi
+    container_name: msgym.api
     build:
       context: .
       dockerfile: Gym/MSGym.API/Dockerfile
     ports:
-        - "32774:8080"
-        - "32775:8081"
+        - 32774:8080
+        - 32775:8081
+    networks:
+        - proxybackend
 
 
   msgamification.api:
     image: ${DOCKER_REGISTRY-}msgamificationapi
+    container_name: msgamification.api
     build:
       context: .
       dockerfile: Gym/MSGamification.API/Dockerfile
     ports:
-        - "32776:8080"
-        - "32777:8081"
+        - 32776:8080
+        - 32777:8081
+    networks:
+        - proxybackend
 
+  api.gateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    container_name: api.gateway
+    build:
+      context: .
+      dockerfile: API.Gateway/Dockerfile
+    ports:
+        - 32778:8080
+        - 32779:8081
+    networks:
+        - proxybackend
 
-
+networks:
+  proxybackend:
+    name: proxybackend
+    driver: bridge
 

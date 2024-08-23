@@ -6,7 +6,8 @@
       "serviceActions": {
         "msauth.api": "StartDebugging",
         "msgamification.api": "StartDebugging",
-        "msgym.api": "StartDebugging"
+        "msgym.api": "StartDebugging",
+        "api.gateway": "StartDebugging"
       }
     }
   }

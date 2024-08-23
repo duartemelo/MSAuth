@@ -24,11 +24,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gym", "Gym", "{64021AEE-0A1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSGym", "MSGym", "{6B40B9E6-3019-4C81-9515-CA5A96E75305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSGym.API", "Gym\MSGym.API\MSGym.API.csproj", "{A8DD2165-43FF-47F1-97C0-77D1DBBCE350}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSGym.API", "Gym\MSGym.API\MSGym.API.csproj", "{A8DD2165-43FF-47F1-97C0-77D1DBBCE350}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSGamification", "MSGamification", "{B300FF8B-0A2B-45D2-A8B7-34E56CD47240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSGamification.API", "Gym\MSGamification.API\MSGamification.API.csproj", "{714476F2-5AD2-4294-86FD-0015B49254F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSGamification.API", "Gym\MSGamification.API\MSGamification.API.csproj", "{714476F2-5AD2-4294-86FD-0015B49254F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Gateway", "API.Gateway\API.Gateway.csproj", "{7C6642E7-1BD7-4574-8830-E0DA535112B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +66,10 @@ Global
 		{714476F2-5AD2-4294-86FD-0015B49254F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{714476F2-5AD2-4294-86FD-0015B49254F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{714476F2-5AD2-4294-86FD-0015B49254F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C6642E7-1BD7-4574-8830-E0DA535112B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6642E7-1BD7-4574-8830-E0DA535112B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6642E7-1BD7-4574-8830-E0DA535112B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6642E7-1BD7-4574-8830-E0DA535112B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

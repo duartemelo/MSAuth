@@ -90,7 +90,7 @@ if (app.Environment.IsDevelopment())
     app.UseHangfireDashboard();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); // For testing purposes was commented out
 
 app.UseAuthorization();
 

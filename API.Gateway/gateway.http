@@ -1,0 +1,5 @@
+@BaseUrl = http://localhost:32778
+
+### Proxy
+
+GET {{BaseUrl}}/api/User/InternalId/123
