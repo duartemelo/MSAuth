@@ -62,5 +62,22 @@ namespace MSAuth.Domain.Services
             user.UpdateRefreshToken(refreshToken, expiresHoursRefreshToken);
             _unitOfWork.UserRepository.Update(user);
         }
+
+        public bool ValidateUserForLogin(UserLoginDTO requestUser, User existentUser)
+        {
+            if (!existentUser.ValidatePassword(requestUser.Password))
+            {
+                _notificationContext.AddNotification(NotificationKeys.INVALID_USER_CREDENTIALS, string.Empty);
+                return false;
+            }
+
+            if (!existentUser.IsConfirmed)
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_IS_NOT_CONFIRMED, string.Empty);
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -80,15 +80,8 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            if (!existentUser.ValidatePassword(user.Password))
+            if (!_userService.ValidateUserForLogin(user, existentUser))
             {
-                _notificationContext.AddNotification(NotificationKeys.INVALID_USER_CREDENTIALS, string.Empty);
-                return null;
-            }
-
-            if (!existentUser.IsConfirmed)
-            {
-                _notificationContext.AddNotification(NotificationKeys.USER_IS_NOT_CONFIRMED, string.Empty);
                 return null;
             }
 
