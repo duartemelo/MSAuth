@@ -11,7 +11,6 @@ namespace MSAuth.Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<App> Apps { get; set; }
         public DbSet<UserConfirmation> UserConfirmations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

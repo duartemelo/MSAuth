@@ -24,9 +24,9 @@ namespace MSAuth.Domain.Services
             return await _unitOfWork.UserConfirmationRepository.AddAsync(userConfirmation);
         }
 
-        public async Task<bool> Confirm(string token, App app)
+        public async Task<bool> Confirm(string token)
         {
-            var userConfirmation = await _unitOfWork.UserConfirmationRepository.GetByTokenAsync(token, app);
+            var userConfirmation = await _unitOfWork.UserConfirmationRepository.GetByTokenAsync(token);
 
             if (userConfirmation == null)
             {

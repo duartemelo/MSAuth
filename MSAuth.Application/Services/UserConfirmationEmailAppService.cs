@@ -29,16 +29,9 @@ namespace MSAuth.Application.Services
             _userConfirmationAppService = userConfirmationAppService;
         }
 
-        public async Task<string?> Create(UserConfirmationCreateDTO confirmationCreate, string appKey)
+        public async Task<string?> Create(UserConfirmationCreateDTO confirmationCreate)
         {
-            var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
-            if (app == null)
-            {
-                _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
-                return null;
-            }
-
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(confirmationCreate.UserId, appKey);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(confirmationCreate.UserId);
             if (user == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);
@@ -75,9 +68,9 @@ namespace MSAuth.Application.Services
             await _emailService.Send(userEmail, userConfirmationToken);
         }
 
-        public async Task<bool> Confirm(UserConfirmationValidateDTO validation, string appKey)
+        public async Task<bool> Confirm(UserConfirmationValidateDTO validation)
         {
-            return await _userConfirmationAppService.Confirm(validation, appKey);
+            return await _userConfirmationAppService.Confirm(validation);
         }
     }
 }

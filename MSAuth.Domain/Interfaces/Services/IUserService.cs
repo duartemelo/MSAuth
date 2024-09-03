@@ -5,7 +5,7 @@ namespace MSAuth.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        Task<User?> CreateUserAsync(UserCreateDTO userToCreate, App app);
+        Task<User?> CreateUserAsync(UserCreateDTO userToCreate);
         void UpdateRefreshToken(User user, string refreshToken);
         bool ValidateUserForLogin(UserLoginDTO requestUser, User existentUser);
         Task<bool> ValidateUserIsConfirmed(User existentUser);

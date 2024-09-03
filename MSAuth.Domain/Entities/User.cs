@@ -6,7 +6,6 @@ namespace MSAuth.Domain.Entities
 {
     public class User : BaseEntity
     {
-        public App App { get; set; }
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
@@ -27,9 +26,8 @@ namespace MSAuth.Domain.Entities
         private User()
         {
         }
-        public User(App app, string email, string password)
+        public User(string email, string password)
         {
-            App = app;
             Email = email;
             SetPassword(password);
         }
@@ -52,6 +50,11 @@ namespace MSAuth.Domain.Entities
             using var hmac = new HMACSHA256(PasswordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             return StructuralComparisons.StructuralEqualityComparer.Equals(computedHash, PasswordHash);
+        }
+
+        public void UpdateLastAccessDate()
+        {
+            DateOfLastAccess = DateTime.UtcNow;
         }
 
         

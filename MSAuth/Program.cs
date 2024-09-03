@@ -3,6 +3,7 @@ using FluentValidation;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
+using MSAuth.API.Middlewares;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Application.Mappings;
@@ -25,7 +26,6 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false);
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new UserMappingProfile());
-    mc.AddProfile(new AppMappingProfile());
 });
 
 IMapper mapper = mapperConfig.CreateMapper();
@@ -51,7 +51,6 @@ builder.Services.AddScoped<ModelErrorsContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
-builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserConfirmationService, UserConfirmationService>();
 
@@ -63,7 +62,6 @@ builder.Services.AddScoped<EntityValidationService>();
 
 // Add App Services
 builder.Services.AddScoped<IUserAppService, UserAppService>();
-builder.Services.AddScoped<IAppAppService, AppAppService>();
 builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppService>();
 
 // Add Infrastructure Services
@@ -81,6 +79,9 @@ builder.Services.AddHangfire((sp, config) =>
 builder.Services.AddHangfireServer();
 
 var app = builder.Build();
+
+// Add Middlewares
+app.UseMiddleware<AppKeyValidationMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

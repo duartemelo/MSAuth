@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSAuth.API.ActionFilters;
 using MSAuth.API.Extensions;
-using MSAuth.API.Utils;
 using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.ModelErrors;
@@ -10,7 +8,6 @@ using MSAuth.Domain.Notifications;
 namespace MSAuth.API.Controllers
 {
     [ApiController]
-    [RequireAppKey]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
@@ -27,7 +24,7 @@ namespace MSAuth.API.Controllers
         [HttpGet("InternalId/{id}")]
         public async Task<IActionResult> GetUserByInternalId(long id)
         {
-            var user = await _userAppService.GetUserByIdAsync(id, AppKey.GetAppKey(HttpContext));
+            var user = await _userAppService.GetUserByIdAsync(id);
             return DomainResult<UserGetDTO?>.Ok(user, _notificationContext, _modelErrorsContext);         
         }
 
@@ -39,21 +36,21 @@ namespace MSAuth.API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser(UserLoginDTO user)
         {
-            var result = await _userAppService.Login(user, AppKey.GetAppKey(HttpContext));
+            var result = await _userAppService.Login(user);
             return DomainResult<UserLoginResponseDTO?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> PostUser(UserCreateDTO user)
         {
-            var createdUser = await _userAppService.CreateUserAsync(user, AppKey.GetAppKey(HttpContext));
+            var createdUser = await _userAppService.CreateUserAsync(user);
             return DomainResult<UserCreateResponseDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
         }
 
         [HttpGet("Refresh/{refreshToken}")]
         public async Task<IActionResult> RefreshUser(string refreshToken)
         {
-            var result = await _userAppService.Refresh(refreshToken, AppKey.GetAppKey(HttpContext));
+            var result = await _userAppService.Refresh(refreshToken);
             return DomainResult<UserLoginResponseDTO?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
     }

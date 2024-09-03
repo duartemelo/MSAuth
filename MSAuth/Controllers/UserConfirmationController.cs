@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSAuth.API.ActionFilters;
 using MSAuth.API.Extensions;
-using MSAuth.API.Utils;
 using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.ModelErrors;
@@ -10,7 +8,6 @@ using MSAuth.Domain.Notifications;
 namespace MSAuth.API.Controllers
 {
     [ApiController]
-    [RequireAppKey]
     [Route("api/[controller]")]
     public class UserConfirmationController : Controller
     {
@@ -32,7 +29,7 @@ namespace MSAuth.API.Controllers
         [HttpPost("Confirm")]
         public async Task<IActionResult> ConfirmUser(UserConfirmationValidateDTO validation)
         {
-            bool result = await _userConfirmationAppService.Confirm(validation, AppKey.GetAppKey(HttpContext));
+            bool result = await _userConfirmationAppService.Confirm(validation);
             return DomainResult<bool>.Ok(result, _notificationContext, _modelErrorsContext);
         }
 
@@ -45,7 +42,7 @@ namespace MSAuth.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserConfirmationCreateDTO confirmationCreate)
         {
-            string? result = await _userConfirmationAppService.Create(confirmationCreate, AppKey.GetAppKey(HttpContext));
+            string? result = await _userConfirmationAppService.Create(confirmationCreate);
             return DomainResult<string?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
     }

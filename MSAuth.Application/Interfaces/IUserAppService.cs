@@ -4,9 +4,9 @@ namespace MSAuth.Application.Interfaces
 {
     public interface IUserAppService
     {
-        Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user, string appKey);
-        Task<UserGetDTO?> GetUserByIdAsync(long userId, string appKey);
-        Task<UserLoginResponseDTO?> Login(UserLoginDTO user, string appKey);
-        Task<UserLoginResponseDTO?> Refresh(string refreshToken, string v);
+        Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user);
+        Task<UserGetDTO?> GetUserByIdAsync(long userId);
+        Task<UserLoginResponseDTO?> Login(UserLoginDTO user);
+        Task<UserLoginResponseDTO?> Refresh(string refreshToken);
     }
 }

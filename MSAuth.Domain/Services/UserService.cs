@@ -29,7 +29,7 @@ namespace MSAuth.Domain.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<User?> CreateUserAsync(UserCreateDTO userToCreate, App app)
+        public async Task<User?> CreateUserAsync(UserCreateDTO userToCreate)
         {
             var validationResult = _entityValidationService.Validate(_userCreateDTOValidator, userToCreate);
             if (!validationResult)
@@ -37,14 +37,14 @@ namespace MSAuth.Domain.Services
                 return null;
             }
 
-            var userExists = await _unitOfWork.UserRepository.GetUserExistsSameApp(userToCreate.Email, app.AppKey);
+            var userExists = await _unitOfWork.UserRepository.GetUserExists(userToCreate.Email);
             if (userExists)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS, string.Empty);
                 return null;
             }
 
-            var user = new User(app, userToCreate.Email, userToCreate.Password);
+            var user = new User(userToCreate.Email, userToCreate.Password);
 
             return await _unitOfWork.UserRepository.AddAsync(user);
         }

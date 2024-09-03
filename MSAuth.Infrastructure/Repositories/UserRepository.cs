@@ -11,27 +11,27 @@ namespace MSAuth.Infrastructure.Repositories
         {
         }
 
-        public async Task<User?> GetByIdAsync(long userId, string appKey)
+        public async Task<User?> GetByIdAsync(long userId)
         {
-            return await GetEntity().FirstOrDefaultAsync(u => u.Id == userId && u.App.AppKey == appKey);
+            return await GetEntity().FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public async Task<User?> GetByEmailAsync(string email, string appKey)
+        public async Task<User?> GetByEmailAsync(string email)
         {
             return await GetEntity()
                 .Include(x => x.UserConfirmations)
-                .FirstOrDefaultAsync(user => user.Email == email && user.App.AppKey == appKey);
+                .FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task<bool> GetUserExistsSameApp(string email, string appKey)
+        public async Task<bool> GetUserExists(string email)
         {
-            return await GetEntity().AnyAsync(user => user.App.AppKey == appKey && user.Email == email);
+            return await GetEntity().AnyAsync(user => user.Email == email);
         }
 
-        public async Task<User?> GetByRefreshTokenAsync(string refreshToken, string appKey)
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
             return await GetEntity()
-                .FirstOrDefaultAsync(user => user.RefreshToken == refreshToken && user.RefreshTokenExpire > DateTime.UtcNow && user.App.AppKey == appKey);
+                .FirstOrDefaultAsync(user => user.RefreshToken == refreshToken && user.RefreshTokenExpire > DateTime.UtcNow);
         }
     }
 }

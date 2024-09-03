@@ -9,7 +9,6 @@ namespace MSAuth.Infrastructure.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
 
-        private IAppRepository _appRepository = null!;
         private IUserRepository _userRepository = null!;
         private IUserConfirmationRepository _userConfirmationRepository = null!;
 
@@ -21,18 +20,6 @@ namespace MSAuth.Infrastructure.UnitOfWork
         public async Task<bool> CommitAsync()
         {
             return await _context.SaveChangesAsync() > 0;
-        }
-
-        public IAppRepository AppRepository
-        {
-            get
-            {
-                if (_appRepository == null)
-                {
-                    _appRepository = new AppRepository(_context);
-                }
-                return _appRepository;
-            }
         }
 
         public IUserRepository UserRepository

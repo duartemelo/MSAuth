@@ -30,9 +30,9 @@ namespace MSAuth.Application.Services
             _tokenService = tokenService;
         }
 
-        public async Task<UserGetDTO?> GetUserByIdAsync(long userId, string appKey)
+        public async Task<UserGetDTO?> GetUserByIdAsync(long userId)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, appKey);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
             if (user == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);   
@@ -40,19 +40,11 @@ namespace MSAuth.Application.Services
             return _mapper.Map<UserGetDTO>(user);
         }
 
-        public async Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user, string appKey)
+        public async Task<UserCreateResponseDTO?> CreateUserAsync(UserCreateDTO user)
         {
-            var app = await _unitOfWork.AppRepository.GetByAppKeyAsync(appKey);
-            if (app == null)
-            {
-                _notificationContext.AddNotification(NotificationKeys.APP_NOT_FOUND, string.Empty);
-                return null;
-            } 
-
-            var createdUser = await _userService.CreateUserAsync(user, app);
+            var createdUser = await _userService.CreateUserAsync(user);
             if (createdUser == null)
             {
-                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
                 return null;
             }
 
@@ -70,9 +62,9 @@ namespace MSAuth.Application.Services
             return response;
         }
 
-        public async Task<UserLoginResponseDTO?> Login(UserLoginDTO user, string appKey)
+        public async Task<UserLoginResponseDTO?> Login(UserLoginDTO user)
         {
-            var existentUser = await _unitOfWork.UserRepository.GetByEmailAsync(user.Email, appKey);
+            var existentUser = await _unitOfWork.UserRepository.GetByEmailAsync(user.Email);
 
             if (existentUser == null)
             {
@@ -89,6 +81,7 @@ namespace MSAuth.Application.Services
             var token = _tokenService.GenerateToken(existentUser);
 
             _userService.UpdateRefreshToken(existentUser, refreshToken);
+            existentUser.UpdateLastAccessDate();
 
             if (!await _unitOfWork.CommitAsync())
             {
@@ -103,11 +96,11 @@ namespace MSAuth.Application.Services
             };
         }
 
-        public async Task<UserLoginResponseDTO?> Refresh(string refreshToken, string appKey)
+        public async Task<UserLoginResponseDTO?> Refresh(string refreshToken)
         {
             // TODO: Implement caching?
 
-            var existentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken, appKey);
+            var existentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken);
             if (existentUser == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.INVALID_REFRESH_TOKEN, string.Empty);

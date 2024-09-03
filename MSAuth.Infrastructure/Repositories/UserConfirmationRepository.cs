@@ -13,9 +13,9 @@ namespace MSAuth.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<UserConfirmation?> GetByTokenAsync(string token, App app)
+        public async Task<UserConfirmation?> GetByTokenAsync(string token)
         {
-            return await _context.UserConfirmations.FirstOrDefaultAsync(x => x.Token == token && x.User!.App == app);
+            return await _context.UserConfirmations.FirstOrDefaultAsync(x => x.Token == token);
         }
     }
 }
