@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Domain.DTOs;
-using MSAuth.Domain.Entities;
+using MSAuth.Domain.Interfaces.Persistence.CachedRepositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
@@ -19,8 +19,10 @@ namespace MSAuth.Application.Services
         private readonly IMapper _mapper;
         private readonly IUserConfirmationService _userConfirmationService;
         private readonly ITokenService _tokenService;
+        private readonly IRefreshTokenCachedRepository _refreshTokenCachedRepository;
+        private readonly IConfiguration _configuration;
 
-        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationService userConfirmationService, ITokenService tokenService)
+        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationService userConfirmationService, ITokenService tokenService, IRefreshTokenCachedRepository refreshTokenCachedRepository, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
@@ -28,6 +30,8 @@ namespace MSAuth.Application.Services
             _mapper = mapper;
             _userConfirmationService = userConfirmationService;
             _tokenService = tokenService;
+            _refreshTokenCachedRepository = refreshTokenCachedRepository;
+            _configuration = configuration;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(long userId)
@@ -79,8 +83,10 @@ namespace MSAuth.Application.Services
 
             var refreshToken = _tokenService.GenerateRefreshToken();
             var token = _tokenService.GenerateToken(existentUser);
+            int expiresHoursRefreshToken = int.Parse(_configuration.GetSection("RefreshToken:ExpiresHours").Value!);
 
-            _userService.UpdateRefreshToken(existentUser, refreshToken);
+            await _refreshTokenCachedRepository.SetAsync(refreshToken, existentUser.Id, expiresHoursRefreshToken);
+
             existentUser.UpdateLastAccessDate();
 
             if (!await _unitOfWork.CommitAsync())
@@ -98,25 +104,28 @@ namespace MSAuth.Application.Services
 
         public async Task<UserLoginResponseDTO?> Refresh(string refreshToken)
         {
-            // TODO: Implement caching?
+            long? userId = await _refreshTokenCachedRepository.GetUserIdByRefreshTokenAsync(refreshToken);
 
-            var existentUser = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken);
-            if (existentUser == null)
+            if (userId == null)
+            {
+                _notificationContext.AddNotification(NotificationKeys.INVALID_REFRESH_TOKEN, string.Empty);
+                return null;
+            }
+
+            var user = await _unitOfWork.UserRepository.GetByIdAsync((long)userId); // TODO: instead of doing this, store claims on cache too!
+
+            if (user == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.INVALID_REFRESH_TOKEN, string.Empty);
                 return null;
             }
 
             var newRefreshToken = _tokenService.GenerateRefreshToken();
-            var newToken = _tokenService.GenerateToken(existentUser);
+            var newToken = _tokenService.GenerateToken(user);
+            int expiresHoursRefreshToken = int.Parse(_configuration.GetSection("RefreshToken:ExpiresHours").Value!);
 
-            _userService.UpdateRefreshToken(existentUser, newRefreshToken);
-
-            if (!await _unitOfWork.CommitAsync())
-            {
-                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
-                return null;
-            }
+            await _refreshTokenCachedRepository.RemoveAsync(refreshToken); // remove old refresh token
+            await _refreshTokenCachedRepository.SetAsync(newRefreshToken, (long)userId, expiresHoursRefreshToken); // add new refresh token
 
             return new()
             {

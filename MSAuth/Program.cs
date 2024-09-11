@@ -9,6 +9,7 @@ using MSAuth.Application.Interfaces.Infrastructure;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
+using MSAuth.Domain.Interfaces.Persistence.CachedRepositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.ModelErrors;
@@ -16,6 +17,7 @@ using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
 using MSAuth.Domain.Validators;
 using MSAuth.Infrastructure.Data;
+using MSAuth.Infrastructure.Persistence.CachedRepositories;
 using MSAuth.Infrastructure.Services;
 using MSAuth.Infrastructure.UnitOfWork;
 
@@ -50,6 +52,13 @@ builder.Services.AddScoped<ModelErrorsContext>();
 // Add UnitOfWork
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Add Redis Cache
+builder.Services.AddStackExchangeRedisCache(redisOptions =>
+{
+    string connection = builder.Configuration.GetConnectionString("Redis")!;
+    redisOptions.Configuration = connection;
+});
+
 // Add Domain Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserConfirmationService, UserConfirmationService>();
@@ -67,6 +76,9 @@ builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppServi
 // Add Infrastructure Services
 builder.Services.AddScoped<IEmailService, MockedEmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+// Add Caching Repositories
+builder.Services.AddScoped<IRefreshTokenCachedRepository, RefreshTokenCachedRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

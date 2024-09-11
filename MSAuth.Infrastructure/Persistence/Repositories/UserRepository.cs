@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSAuth.Domain.Entities;
-using MSAuth.Domain.Interfaces.Repositories;
+using MSAuth.Domain.Interfaces.Persistence.Repositories;
 using MSAuth.Infrastructure.Data;
 
-namespace MSAuth.Infrastructure.Repositories
+namespace MSAuth.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {

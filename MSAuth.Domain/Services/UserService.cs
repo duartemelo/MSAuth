@@ -1,12 +1,10 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
-using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using static MSAuth.Domain.Constants.Constants;
 

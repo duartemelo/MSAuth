@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSAuth.Domain.Interfaces.Repositories
+namespace MSAuth.Domain.Interfaces.Persistence.Repositories
 {
     public interface IUserConfirmationRepository : IBaseRepository<UserConfirmation>
     {

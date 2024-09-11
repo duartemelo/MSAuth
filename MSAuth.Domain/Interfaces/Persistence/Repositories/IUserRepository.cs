@@ -1,6 +1,6 @@
 ﻿using MSAuth.Domain.Entities;
 
-namespace MSAuth.Domain.Interfaces.Repositories
+namespace MSAuth.Domain.Interfaces.Persistence.Repositories
 {
     public interface IUserRepository : IBaseRepository<User>
     {

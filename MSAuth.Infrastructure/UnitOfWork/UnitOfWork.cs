@@ -1,7 +1,7 @@
-﻿using MSAuth.Domain.Interfaces.Repositories;
+﻿using MSAuth.Domain.Interfaces.Persistence.Repositories;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Infrastructure.Data;
-using MSAuth.Infrastructure.Repositories;
+using MSAuth.Infrastructure.Persistence.Repositories;
 
 namespace MSAuth.Infrastructure.UnitOfWork
 {

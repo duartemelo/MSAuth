@@ -1,4 +1,4 @@
-﻿using MSAuth.Domain.Interfaces.Repositories;
+﻿using MSAuth.Domain.Interfaces.Persistence.Repositories;
 
 namespace MSAuth.Domain.Interfaces.UnitOfWork
 {

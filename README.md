@@ -9,7 +9,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 ## To-Do List
 
 - [X] Base layers (CLEAN architecture, DDD)
-- [x] Dependency injection
+- [X] Dependency injection
 - [X] Unit Of Work
 - [X] Notification Context
 - [X] Notification Filter
@@ -27,8 +27,9 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Docker compose
 - [X] Create an API Gateway to use multiple MS
 - [ ] Implement async communication using RabbitMQ
-- [ ] Implement Redis distributed cache
+- [X] Implement Redis distributed cache
 - [ ] Fix race condition issues
+- [ ] Create a Postman collection to share so people can test the project
 - [ ] Create a front-end to consume the back-end services
 
 ## Run the project
