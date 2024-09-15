@@ -82,10 +82,10 @@ namespace MSAuth.Application.Services
             }
 
             var refreshToken = _tokenService.GenerateRefreshToken();
-            var token = _tokenService.GenerateToken(existentUser);
+            var token = _tokenService.GenerateToken(existentUser.Claims);
             int expiresHoursRefreshToken = int.Parse(_configuration.GetSection("RefreshToken:ExpiresHours").Value!);
 
-            await _refreshTokenCachedRepository.SetAsync(refreshToken, existentUser.Id, expiresHoursRefreshToken);
+            await _refreshTokenCachedRepository.SetAsync(refreshToken, existentUser.Claims, expiresHoursRefreshToken);
 
             existentUser.UpdateLastAccessDate();
 
@@ -104,15 +104,7 @@ namespace MSAuth.Application.Services
 
         public async Task<UserLoginResponseDTO?> Refresh(string refreshToken)
         {
-            long? userId = await _refreshTokenCachedRepository.GetUserIdByRefreshTokenAsync(refreshToken);
-
-            if (userId == null)
-            {
-                _notificationContext.AddNotification(NotificationKeys.INVALID_REFRESH_TOKEN, string.Empty);
-                return null;
-            }
-
-            var user = await _unitOfWork.UserRepository.GetByIdAsync((long)userId); // TODO: instead of doing this, store claims on cache too!
+            var user = await _refreshTokenCachedRepository.GetUserClaimsByRefreshTokenAsync(refreshToken);
 
             if (user == null)
             {
@@ -125,7 +117,7 @@ namespace MSAuth.Application.Services
             int expiresHoursRefreshToken = int.Parse(_configuration.GetSection("RefreshToken:ExpiresHours").Value!);
 
             await _refreshTokenCachedRepository.RemoveAsync(refreshToken); // remove old refresh token
-            await _refreshTokenCachedRepository.SetAsync(newRefreshToken, (long)userId, expiresHoursRefreshToken); // add new refresh token
+            await _refreshTokenCachedRepository.SetAsync(newRefreshToken, user, expiresHoursRefreshToken); // add new refresh token
 
             return new()
             {

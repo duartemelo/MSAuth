@@ -17,7 +17,7 @@ namespace MSAuth.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(UserClaims user)
         {
             IEnumerable<Claim> claims = new List<Claim>
             {

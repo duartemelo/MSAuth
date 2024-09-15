@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.IdentityModel.Tokens;
+using MSAuth.Domain.Entities;
 using MSAuth.Domain.Interfaces.Persistence.CachedRepositories;
 using Newtonsoft.Json;
 
@@ -15,19 +17,24 @@ namespace MSAuth.Infrastructure.Persistence.CachedRepositories
             _distributedCache = distributedCache;
         }
 
-        public async Task<long?> GetUserIdByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+        public async Task<UserClaims?> GetUserClaimsByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             string key = $"refresh-{refreshToken}";
 
-            string? userId = await _distributedCache.GetStringAsync(key, cancellationToken);
+            string? user = await _distributedCache.GetStringAsync(key, cancellationToken);
 
-            if (userId == null)
+            if (string.IsNullOrEmpty(user))
                 return null;
 
-            return JsonConvert.DeserializeObject<long>(userId);
+            return JsonConvert.DeserializeObject<UserClaims>(
+                user, 
+                new JsonSerializerSettings 
+                {
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+                });
         }
 
-        public async Task SetAsync(string refreshToken, long userId, int expirationHours, CancellationToken cancellationToken = default)
+        public async Task SetAsync(string refreshToken, UserClaims userClaims, int expirationHours, CancellationToken cancellationToken = default)
         {
             var cacheOptions = new DistributedCacheEntryOptions
             {
@@ -38,7 +45,7 @@ namespace MSAuth.Infrastructure.Persistence.CachedRepositories
 
             await _distributedCache.SetStringAsync(
                 key,
-                JsonConvert.SerializeObject(userId),
+                JsonConvert.SerializeObject(userClaims),
                 cacheOptions,
                 cancellationToken);
         }

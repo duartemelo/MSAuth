@@ -5,6 +5,6 @@ namespace MSAuth.Application.Interfaces.Infrastructure
     public interface ITokenService
     {
         string GenerateRefreshToken();
-        string GenerateToken(User user);
+        string GenerateToken(UserClaims user);
     }
 }
