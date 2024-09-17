@@ -25,7 +25,7 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Refresh token
 - [X] Docker containerization
 - [X] Docker compose
-- [X] Create an API Gateway to use multiple MS
+- [X] API Gateway with YARP
 - [ ] Implement async communication using RabbitMQ
 - [X] Implement Redis distributed cache
 - [ ] Fix race condition issues
