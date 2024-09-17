@@ -10,8 +10,6 @@ namespace MSAuth.Infrastructure.Persistence.CachedRepositories
     {
         private readonly IDistributedCache _distributedCache;
 
-        // TODO: error handling (not here, but where this repository is consumed)
-
         public RefreshTokenCachedRepository(IDistributedCache distributedCache)
         {
             _distributedCache = distributedCache;

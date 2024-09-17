@@ -18,8 +18,8 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Model Error Filter
 - [X] Add FluentValidation to simplify model validation
 - [X] AutoMapper
-- [X] Email service (mocked) + hangfire
-- [X] Install and simple example of Hangfire
+- [X] Email service using Papercut and FluentEmail
+- [X] Outbox pattern using Hangfire
 - [ ] Implement all endpoints
 - [X] JSON Web Tokens (JWT) generation
 - [X] Refresh token

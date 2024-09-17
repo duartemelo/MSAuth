@@ -58,6 +58,15 @@ services:
     networks:
       - proxybackend
 
+  papercut:
+    image: changemakerstudiosus/papercut-smtp:latest
+    container_name: papercut
+    ports:
+        - 8080:80
+        - 25:25
+    networks:
+        - proxybackend
+
 networks:
   proxybackend:
     name: proxybackend

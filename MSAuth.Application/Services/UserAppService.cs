@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using Microsoft.Extensions.Configuration;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
@@ -7,6 +8,7 @@ using MSAuth.Domain.Interfaces.Persistence.CachedRepositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
+using MSAuth.Domain.Services;
 using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
@@ -18,11 +20,20 @@ namespace MSAuth.Application.Services
         private readonly NotificationContext _notificationContext;
         private readonly IMapper _mapper;
         private readonly IUserConfirmationService _userConfirmationService;
+        private readonly IUserConfirmationAppService _userConfirmationAppService;
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenCachedRepository _refreshTokenCachedRepository;
         private readonly IConfiguration _configuration;
 
-        public UserAppService(IUnitOfWork unitOfWork, IUserService userService, NotificationContext notificationContext, IMapper mapper, IUserConfirmationService userConfirmationService, ITokenService tokenService, IRefreshTokenCachedRepository refreshTokenCachedRepository, IConfiguration configuration)
+        public UserAppService(IUnitOfWork unitOfWork,
+            IUserService userService, 
+            NotificationContext notificationContext, 
+            IMapper mapper, 
+            IUserConfirmationService userConfirmationService, 
+            ITokenService tokenService, 
+            IRefreshTokenCachedRepository refreshTokenCachedRepository, 
+            IConfiguration configuration, 
+            IUserConfirmationAppService userConfirmationAppService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
@@ -32,6 +43,7 @@ namespace MSAuth.Application.Services
             _tokenService = tokenService;
             _refreshTokenCachedRepository = refreshTokenCachedRepository;
             _configuration = configuration;
+            _userConfirmationAppService = userConfirmationAppService;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(long userId)
@@ -53,12 +65,14 @@ namespace MSAuth.Application.Services
             }
 
             var userConfirmation = await _userConfirmationService.CreateUserConfirmationAsync(createdUser);
-            
+
             if (!await _unitOfWork.CommitAsync())
             {
                 _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
                 return null;
             }
+
+            BackgroundJob.Enqueue(() => _userConfirmationAppService.SendUserConfirmationJob(user.Email!, userConfirmation.Token));
 
             var response = _mapper.Map<UserCreateResponseDTO>(createdUser);
             response.ConfirmationToken = userConfirmation.Token;

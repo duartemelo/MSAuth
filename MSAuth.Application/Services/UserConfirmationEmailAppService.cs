@@ -14,19 +14,19 @@ namespace MSAuth.Application.Services
     {
         private readonly IUserConfirmationService _userConfirmationService;
         private readonly IEmailService _emailService;
-        private readonly IUserService _userService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserConfirmationAppService _userConfirmationAppService;
         private readonly NotificationContext _notificationContext;
 
-        public UserConfirmationEmailAppService(IUserConfirmationService userConfirmationService, IEmailService emailService, IUnitOfWork unitOfWork, NotificationContext notificationContext, IUserService userService, UserConfirmationAppService userConfirmationAppService)
+        public UserConfirmationEmailAppService(
+            IUserConfirmationService userConfirmationService, 
+            IEmailService emailService, 
+            IUnitOfWork unitOfWork, 
+            NotificationContext notificationContext)
         {
             _userConfirmationService = userConfirmationService;
             _emailService = emailService;
             _unitOfWork = unitOfWork;
             _notificationContext = notificationContext;
-            _userService = userService;
-            _userConfirmationAppService = userConfirmationAppService;
         }
 
         public async Task<string?> Create(UserConfirmationCreateDTO confirmationCreate)
@@ -38,8 +38,7 @@ namespace MSAuth.Application.Services
                 return null;
             }
 
-            var userIsConfimed = await _userService.ValidateUserIsConfirmed(user);
-            if (userIsConfimed)
+            if (user.IsConfirmed)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_IS_ALREADY_CONFIRMED, string.Empty);
                 return null;
@@ -55,22 +54,27 @@ namespace MSAuth.Application.Services
 
             var userConfirmation = await _userConfirmationService.CreateUserConfirmationAsync(user);
 
-            BackgroundJob.Enqueue(() => SendUserConfirmationJob(user.Email!, userConfirmation.Token));
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                return null;
+            }
 
-            Console.WriteLine("Job was sent to queue!");
+            BackgroundJob.Enqueue(() => SendUserConfirmationJob(user.Email!, userConfirmation.Token));
 
             return userConfirmation.Token;
         }
 
         [AutomaticRetry(Attempts = 5)]
-        private async Task SendUserConfirmationJob(string userEmail, string userConfirmationToken)
+        public async Task SendUserConfirmationJob(string userEmail, string userConfirmationToken)
         {
             await _emailService.Send(userEmail, userConfirmationToken);
         }
 
         public async Task<bool> Confirm(UserConfirmationValidateDTO validation)
         {
-            return await _userConfirmationAppService.Confirm(validation);
+            await _userConfirmationService.Confirm(validation.Token);
+            return await _unitOfWork.CommitAsync();
         }
     }
 }

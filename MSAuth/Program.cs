@@ -71,11 +71,16 @@ builder.Services.AddScoped<EntityValidationService>();
 
 // Add App Services
 builder.Services.AddScoped<IUserAppService, UserAppService>();
-builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationAppService>();
+builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationEmailAppService>();
 
 // Add Infrastructure Services
-builder.Services.AddScoped<IEmailService, MockedEmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+// Add Email Service
+builder.Services
+    .AddFluentEmail(builder.Configuration["Email:SenderEmail"], builder.Configuration["Email:Sender"])
+    .AddSmtpSender(builder.Configuration["Email:Host"], builder.Configuration.GetValue<int>("Email:Port"));
 
 // Add Caching Repositories
 builder.Services.AddScoped<IRefreshTokenCachedRepository, RefreshTokenCachedRepository>();
