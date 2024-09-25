@@ -9,6 +9,8 @@
         public bool CanCreateRoles { get; set; } = false;
         public bool CanAssignRoles { get; set; } = false;
 
+        private Role () { }
+
         public Role(Gym gym, string name, TimeSpan? duration = null)
         {
             Gym = gym;

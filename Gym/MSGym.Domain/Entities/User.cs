@@ -13,6 +13,8 @@
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
 
+        private User() { }
+
         public User(long externalId, string email, string? phoneNumber)
         {
             ExternalId = externalId;

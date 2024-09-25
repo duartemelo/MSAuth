@@ -7,14 +7,16 @@ namespace MSGym.Domain.Entities
         public ContactType ContactType { get; set; }
         public string Contact {  get; set; }
         public Gym Gym { get; set; }
-        public User CreationUser { get; set; }
+        public string CreationUserEmail { get; set; }
 
-        public GymContact(ContactType contactType, string contact, Gym gym, User creationUser) 
+        private GymContact() { }
+
+        public GymContact(ContactType contactType, string contact, Gym gym, string creationUserEmail) 
         {
             ContactType = contactType;
             Contact = contact;
             Gym = gym;
-            CreationUser = creationUser;
+            CreationUserEmail = creationUserEmail;
         }
     }
 }

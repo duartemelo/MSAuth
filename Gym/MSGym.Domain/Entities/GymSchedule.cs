@@ -6,14 +6,16 @@
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public Gym Gym { get; set; }
-        public User CreationUser { get; set; }
+        public string CreationUserEmail { get; set; }
 
-        public GymSchedule(DayOfWeek dayOfWeek, TimeOnly startTime, TimeOnly endTime, Gym gym, User creationUser) {
+        private GymSchedule() { }
+
+        public GymSchedule(DayOfWeek dayOfWeek, TimeOnly startTime, TimeOnly endTime, Gym gym, string creationUserEmail) {
             DayOfWeek = dayOfWeek;
             StartTime = startTime;
             EndTime = endTime;
             Gym = gym;
-            CreationUser = creationUser;
+            CreationUserEmail = creationUserEmail;
         }
     }
 }

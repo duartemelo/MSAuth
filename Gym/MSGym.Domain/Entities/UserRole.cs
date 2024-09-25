@@ -4,14 +4,16 @@
     {
         public User User { get; set; }
         public Role Role { get; set; }
-        public User CreationUser { get; set; }
+        public string CreationUserEmail { get; set; }
         public DateTime? ExpiryDate { get; set; }
 
-        public UserRole(User user, Role role, User creationUser, DateTime? expiryDate = null)
+        private UserRole() { }
+
+        public UserRole(User user, Role role, string creationUserEmail, DateTime? expiryDate = null)
         {
             User = user;
             Role = role;
-            CreationUser = creationUser;
+            CreationUserEmail = creationUserEmail;
 
             if (role.Duration.HasValue)
             {
