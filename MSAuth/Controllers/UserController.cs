@@ -47,6 +47,10 @@ namespace MSAuth.API.Controllers
             return DomainResult<UserCreateResponseDTO?>.Ok(createdUser, _notificationContext, _modelErrorsContext);
         }
 
+        // TODO: add delete user
+        // brainstorm on this, how to deal with added stuff on MSGym?
+        // produce event to delete
+
         [HttpGet("Refresh/{refreshToken}")]
         public async Task<IActionResult> RefreshUser(string refreshToken)
         {

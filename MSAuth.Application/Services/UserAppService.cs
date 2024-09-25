@@ -74,6 +74,8 @@ namespace MSAuth.Application.Services
 
             BackgroundJob.Enqueue(() => _userConfirmationAppService.SendUserConfirmationJob(user.Email!, userConfirmation.Token));
 
+            // TODO: produce event to MSGym (create new user there too!)
+
             var response = _mapper.Map<UserCreateResponseDTO>(createdUser);
             response.ConfirmationToken = userConfirmation.Token;
 

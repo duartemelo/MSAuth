@@ -8,17 +8,20 @@
     /// </summary>
     public class User : BaseEntity
     {
-        // TODO: add first name, last name (after adding on auth ms)
         public long ExternalId { get; set; }
         public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string? PhoneNumber { get; set; }
 
         private User() { }
 
-        public User(long externalId, string email, string? phoneNumber)
+        public User(long externalId, string email, string firstName, string lastName, string? phoneNumber)
         {
             ExternalId = externalId;
             Email = email;
+            FirstName = firstName;
+            LastName = lastName;
             PhoneNumber = phoneNumber;
         }
     }
