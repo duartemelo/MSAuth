@@ -18,5 +18,31 @@ namespace MSAuth.Infrastructure.Data
             // Configurações adicionais, como chaves primárias compostas, índices, etc.
             base.OnModelCreating(modelBuilder);
         }
+
+        // TODO: convert to interceptor (?)
+        // TODO: test performance of UpdateDateOfModification!
+
+        public override int SaveChanges()
+        {
+            UpdateDateOfModification();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateDateOfModification();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateDateOfModification()
+        {
+            var modifiedEntities = ChangeTracker.Entries()
+                .Where(e => e.Entity is BaseEntity && e.State == EntityState.Modified);
+
+            foreach (var entry in modifiedEntities)
+            {
+                ((BaseEntity)entry.Entity).DateOfModification = DateTime.Now;
+            }
+        }
     }
 }

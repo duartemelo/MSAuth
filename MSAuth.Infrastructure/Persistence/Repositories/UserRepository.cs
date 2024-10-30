@@ -18,9 +18,7 @@ namespace MSAuth.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await GetEntity()
-                .Include(x => x.UserConfirmations)
-                .FirstOrDefaultAsync(user => user.Email == email);
+            return await GetEntity().FirstOrDefaultAsync(user => user.Email == email);
         }
 
         public async Task<bool> GetUserExists(string email)

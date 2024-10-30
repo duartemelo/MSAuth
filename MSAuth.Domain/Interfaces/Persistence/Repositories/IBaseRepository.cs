@@ -7,6 +7,5 @@ namespace MSAuth.Domain.Interfaces.Persistence.Repositories
         Task<T> AddAsync(T entity);
         void Delete(T entity);
         IQueryable<T> GetEntity();
-        void Update(T entity);
     }
 }

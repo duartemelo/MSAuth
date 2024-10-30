@@ -27,12 +27,6 @@ namespace MSAuth.Infrastructure.Persistence.Repositories
             return entity;
         }
 
-        public void Update(T entity)
-        {
-            entity.DateOfModification = DateTime.Now;
-            _context.Entry(entity).State = EntityState.Modified;
-        }
-
         public void Delete(T entity)
         {
             _dbSet.Remove(entity);

@@ -33,7 +33,7 @@ namespace MSAuth.Domain.Services
                 return false;
             }
 
-            if (userConfirmation.DateOfExpire <=  DateTime.UtcNow)
+            if (userConfirmation.IsExpired)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_CONFIRMATION_EXPIRED, string.Empty);
                 return false;
@@ -45,10 +45,8 @@ namespace MSAuth.Domain.Services
                 return false;
             }
 
-            userConfirmation.DateOfConfirm = DateTime.Now;
-            _unitOfWork.UserConfirmationRepository.Update(userConfirmation);
+            userConfirmation.Confirm();
             return true;
-            
         }
     }
 }

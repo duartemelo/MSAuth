@@ -18,14 +18,13 @@ namespace MSAuth.Domain.Entities
         public DateTime? DateOfLastAccess { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpire { get; set; }
-        public ICollection<UserConfirmation> UserConfirmations { get; set; } = new List<UserConfirmation>();
+        public virtual ICollection<UserConfirmation> UserConfirmations { get; set; } = [];
         public bool IsConfirmed => UserConfirmations.Any(x => x.DateOfConfirm != null);
         public UserClaims Claims => new(this);
 
         // Construtor necessário para EF
-        private User()
-        {
-        }
+        protected User() {}
+
         public User(string email, string password)
         {
             Email = email;
