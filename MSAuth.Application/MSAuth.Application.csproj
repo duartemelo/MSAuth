@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MSAuth.Domain\MSAuth.Domain.csproj" />
+    <ProjectReference Include="..\Shared\SharedEvents\SharedEvents.csproj" />
   </ItemGroup>
 
 </Project>

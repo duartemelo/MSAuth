@@ -1,11 +1,13 @@
 using AutoMapper;
 using FluentValidation;
 using Hangfire;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MSAuth.API.ActionFilters;
 using MSAuth.API.Middlewares;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
+using MSAuth.Application.Interfaces.Infrastructure.Communication;
 using MSAuth.Application.Mappings;
 using MSAuth.Application.Services;
 using MSAuth.Domain.DTOs;
@@ -16,6 +18,7 @@ using MSAuth.Domain.ModelErrors;
 using MSAuth.Domain.Notifications;
 using MSAuth.Domain.Services;
 using MSAuth.Domain.Validators;
+using MSAuth.Infrastructure.Communication;
 using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.Persistence.CachedRepositories;
 using MSAuth.Infrastructure.Services;
@@ -77,6 +80,7 @@ builder.Services.AddScoped<IUserConfirmationAppService, UserConfirmationEmailApp
 // Add Infrastructure Services
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEventProducer, EventProducer>();
 
 // Add Email Service
 builder.Services
@@ -89,6 +93,25 @@ builder.Services.AddScoped<IRefreshTokenCachedRepository, RefreshTokenCachedRepo
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// MassTransit / RabbitMQ
+builder.Services.AddMassTransit(configure =>
+{
+    configure.SetKebabCaseEndpointNameFormatter();
+
+    configure.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(new Uri(builder.Configuration["RabbitMQ:Host"]!), h =>
+        {
+            h.Username(builder.Configuration["RabbitMQ:Username"]!);
+            h.Password(builder.Configuration["RabbitMQ:Password"]!);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+// Hangfire
 builder.Services.AddHangfire((sp, config) =>
 {
     var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("HangfireConnection");

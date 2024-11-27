@@ -42,7 +42,7 @@ namespace MSAuth.Domain.Services
                 return null;
             }
 
-            var user = new User(userToCreate.Email, userToCreate.Password);
+            var user = new User(userToCreate.Email, userToCreate.FirstName, userToCreate.LastName, userToCreate.Password);
 
             return await _unitOfWork.UserRepository.AddAsync(user);
         }

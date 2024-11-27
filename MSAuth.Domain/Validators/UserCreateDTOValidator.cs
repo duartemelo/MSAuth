@@ -12,6 +12,12 @@ namespace MSAuth.Domain.Validators
                 .NotEmpty().WithMessage("E-mail cannot be null.")
                 .NotNull().WithMessage("E-mail cannot be empty.")
                 .EmailAddress().WithMessage("E-mail must be valid.");
+            RuleFor(x => x.FirstName)
+                .NotEmpty().WithMessage("First name cannot be null.")
+                .NotNull().WithMessage("First name cannot be empty.");
+            RuleFor(x => x.LastName)
+                .NotEmpty().WithMessage("Last name cannot be null.")
+                .NotNull().WithMessage("Last name cannot be empty.");
             RuleFor(user => user.Password)
                 .NotEmpty().WithMessage("The password must not be empty.")
                 .NotNull().WithMessage("The password must not be null.")

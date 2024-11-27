@@ -17,6 +17,7 @@ namespace MSAuth.Infrastructure.Data
         {
             // Configurações adicionais, como chaves primárias compostas, índices, etc.
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().ComplexProperty(u => u.Password);
         }
 
         // TODO: convert to interceptor (?)

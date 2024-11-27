@@ -7,6 +7,10 @@ services:
     build:
       context: .
       dockerfile: MSAuth/Dockerfile
+    environment:
+     - RabbitMQ__Host=amqp://auth-queue:5672
+     - RabbitMQ__Username=guest
+     - RabbitMQ__Password=guest
     ports:
         - 32772:8080
         - 32773:8081
@@ -19,6 +23,10 @@ services:
     build:
       context: .
       dockerfile: Gym/MSGym.API/Dockerfile
+    environment:
+     - RabbitMQ__Host=amqp://auth-queue:5672
+     - RabbitMQ__Username=guest
+     - RabbitMQ__Password=guest
     ports:
         - 32774:8080
         - 32775:8081
@@ -66,6 +74,20 @@ services:
         - 25:25
     networks:
         - proxybackend
+
+  auth.queue:
+    image: rabbitmq:management-alpine
+    container_name: Auth.Queue
+    hostname: auth-queue
+    volumes:
+       - ./.containers/queue/data/:/var/lib/rabbitmq
+       - ./.containers/queue/log/:/var/log/rabbitmq
+    environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    ports:
+        - 5672:5672
+        - 15672:15672
 
 networks:
   proxybackend:

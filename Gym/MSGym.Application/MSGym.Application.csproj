@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\SharedEvents\SharedEvents.csproj" />
+    <ProjectReference Include="..\MSGym.Domain\MSGym.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
