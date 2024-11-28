@@ -87,7 +87,8 @@ namespace MSAuth.Application.Services
                 PhoneNumber = createdUser.PhoneNumber,
             };
 
-            await _eventProducer.PublishAsync(userCreateEvent);
+            await _eventProducer.PublishAsync(userCreateEvent); // TODO: outbox here for resilience
+            // TODO: this must be done after user confirms account! (UserConfirmationEmailAppService)
 
             var response = _mapper.Map<UserCreateResponseDTO>(createdUser);
             response.ConfirmationToken = userConfirmation.Token;
