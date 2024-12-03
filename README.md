@@ -26,9 +26,8 @@ This microservice enables the creation of apps, each with its unique app key, wh
 - [X] Docker containerization
 - [X] Docker compose
 - [X] API Gateway with YARP
-- [ ] Implement async communication using RabbitMQ
+- [X] Implement async communication using RabbitMQ
 - [X] Implement Redis distributed cache
-- [ ] Fix race condition issues
 - [ ] Create a Postman collection to share so people can test the project
 - [ ] Create a front-end to consume the back-end services
 
