@@ -6,7 +6,7 @@ services:
     container_name: msauth.api
     build:
       context: .
-      dockerfile: MSAuth/Dockerfile
+      dockerfile: MSAuth/MSAuth.API/Dockerfile
     environment:
      - RabbitMQ__Host=amqp://auth-queue:5672
      - RabbitMQ__Username=guest
@@ -22,7 +22,7 @@ services:
     container_name: msgym.api
     build:
       context: .
-      dockerfile: Gym/MSGym.API/Dockerfile
+      dockerfile: Gym/MSGym/MSGym.API/Dockerfile
     environment:
      - RabbitMQ__Host=amqp://auth-queue:5672
      - RabbitMQ__Username=guest
@@ -39,7 +39,7 @@ services:
     container_name: msgamification.api
     build:
       context: .
-      dockerfile: Gym/MSGamification.API/Dockerfile
+      dockerfile: Gym/MSGamification/MSGamification.API/Dockerfile
     ports:
         - 32776:8080
         - 32777:8081

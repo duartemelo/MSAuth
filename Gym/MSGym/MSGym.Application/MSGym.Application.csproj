@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\SharedEvents\SharedEvents.csproj" />
+    <ProjectReference Include="..\..\..\Shared\SharedEvents\SharedEvents.csproj" />
     <ProjectReference Include="..\MSGym.Domain\MSGym.Domain.csproj" />
   </ItemGroup>
 
