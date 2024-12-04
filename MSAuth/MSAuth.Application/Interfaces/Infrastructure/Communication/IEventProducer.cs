@@ -1,4 +1,4 @@
-﻿namespace MSAuth.Domain.Interfaces.Communication
+﻿namespace MSAuth.Application.Interfaces.Infrastructure.Communication
 {
     public interface IEventProducer
     {

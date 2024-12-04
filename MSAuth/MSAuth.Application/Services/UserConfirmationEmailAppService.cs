@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
+using MSAuth.Application.Interfaces.Infrastructure.Communication;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
+using SharedEvents.User;
 using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
@@ -16,17 +18,20 @@ namespace MSAuth.Application.Services
         private readonly IEmailService _emailService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly NotificationContext _notificationContext;
+        private readonly IEventProducer _eventProducer;
 
         public UserConfirmationEmailAppService(
-            IUserConfirmationService userConfirmationService, 
-            IEmailService emailService, 
-            IUnitOfWork unitOfWork, 
-            NotificationContext notificationContext)
+            IUserConfirmationService userConfirmationService,
+            IEmailService emailService,
+            IUnitOfWork unitOfWork,
+            NotificationContext notificationContext,
+            IEventProducer eventProducer)
         {
             _userConfirmationService = userConfirmationService;
             _emailService = emailService;
             _unitOfWork = unitOfWork;
             _notificationContext = notificationContext;
+            _eventProducer = eventProducer;
         }
 
         public async Task<string?> Create(UserConfirmationCreateDTO confirmationCreate)
@@ -73,7 +78,39 @@ namespace MSAuth.Application.Services
 
         public async Task<bool> Confirm(UserConfirmationValidateDTO validation)
         {
-            return await _userConfirmationService.Confirm(validation.Token);
+            var userConfirmation = await _unitOfWork.UserConfirmationRepository.GetByTokenAsync(validation.Token);
+
+            if (userConfirmation == null)
+            {
+                _notificationContext.AddNotification(NotificationKeys.USER_CONFIRMATION_NOT_FOUND, string.Empty);
+                return false;
+            }
+
+            if (!_userConfirmationService.Confirm(userConfirmation))
+            {
+                return false;
+            }
+
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                return false;
+            }
+
+            var user = userConfirmation.User;
+
+            var userCreateEvent = new UserCreatedEvent
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+            };
+
+            await _eventProducer.PublishAsync(userCreateEvent); // could implement here an outbox pattern for resilience
+
+            return true;
         }
     }
 }
