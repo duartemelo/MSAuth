@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using MSAuth.Application.Interfaces.Infrastructure.Communication;
+using MSAuth.Domain.Interfaces.Communication;
 
 namespace MSAuth.Infrastructure.Communication
 {

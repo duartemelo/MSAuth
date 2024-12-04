@@ -73,11 +73,7 @@ namespace MSAuth.Application.Services
 
         public async Task<bool> Confirm(UserConfirmationValidateDTO validation)
         {
-            await _userConfirmationService.Confirm(validation.Token);
-
-            // TODO: produce event on rabbit mq to create user on msgym
-
-            return await _unitOfWork.CommitAsync();
+            return await _userConfirmationService.Confirm(validation.Token);
         }
     }
 }

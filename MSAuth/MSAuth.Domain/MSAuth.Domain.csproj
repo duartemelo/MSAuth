@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\SharedEvents\SharedEvents.csproj" />
+  </ItemGroup>
+
 </Project>

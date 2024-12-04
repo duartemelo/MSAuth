@@ -14,7 +14,10 @@ namespace MSAuth.API.Controllers
         private readonly IUserConfirmationAppService _userConfirmationAppService;
         private readonly NotificationContext _notificationContext;
         private readonly ModelErrorsContext _modelErrorsContext;
-        public UserConfirmationController(NotificationContext notificationContext, ModelErrorsContext modelErrorsContext, IUserConfirmationAppService userConfirmationAppService)
+        public UserConfirmationController(
+            NotificationContext notificationContext, 
+            ModelErrorsContext modelErrorsContext, 
+            IUserConfirmationAppService userConfirmationAppService)
         {
             _notificationContext = notificationContext;
             _modelErrorsContext = modelErrorsContext;

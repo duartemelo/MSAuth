@@ -3,13 +3,11 @@ using Hangfire;
 using Microsoft.Extensions.Configuration;
 using MSAuth.Application.Interfaces;
 using MSAuth.Application.Interfaces.Infrastructure;
-using MSAuth.Application.Interfaces.Infrastructure.Communication;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Interfaces.Persistence.CachedRepositories;
 using MSAuth.Domain.Interfaces.Services;
 using MSAuth.Domain.Interfaces.UnitOfWork;
 using MSAuth.Domain.Notifications;
-using SharedEvents.User;
 using static MSAuth.Domain.Constants.Constants;
 
 namespace MSAuth.Application.Services
@@ -25,7 +23,6 @@ namespace MSAuth.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenCachedRepository _refreshTokenCachedRepository;
         private readonly IConfiguration _configuration;
-        private readonly IEventProducer _eventProducer;
 
         public UserAppService(IUnitOfWork unitOfWork,
             IUserService userService, 
@@ -35,8 +32,7 @@ namespace MSAuth.Application.Services
             ITokenService tokenService, 
             IRefreshTokenCachedRepository refreshTokenCachedRepository, 
             IConfiguration configuration, 
-            IUserConfirmationAppService userConfirmationAppService,
-            IEventProducer eventProducer)
+            IUserConfirmationAppService userConfirmationAppService)
         {
             _unitOfWork = unitOfWork;
             _userService = userService;
@@ -47,7 +43,6 @@ namespace MSAuth.Application.Services
             _refreshTokenCachedRepository = refreshTokenCachedRepository;
             _configuration = configuration;
             _userConfirmationAppService = userConfirmationAppService;
-            _eventProducer = eventProducer;
         }
 
         public async Task<UserGetDTO?> GetUserByIdAsync(long userId)
@@ -77,18 +72,6 @@ namespace MSAuth.Application.Services
             }
 
             BackgroundJob.Enqueue(() => _userConfirmationAppService.SendUserConfirmationJob(user.Email!, userConfirmation.Token));
-
-            var userCreateEvent = new UserCreatedEvent
-            {
-                UserId = createdUser.Id,
-                Email = createdUser.Email,
-                FirstName = createdUser.FirstName,
-                LastName = createdUser.LastName,
-                PhoneNumber = createdUser.PhoneNumber,
-            };
-
-            await _eventProducer.PublishAsync(userCreateEvent); // TODO: outbox here for resilience
-            // TODO: this must be done after user confirms account! (UserConfirmationEmailAppService)
 
             var response = _mapper.Map<UserCreateResponseDTO>(createdUser);
             response.ConfirmationToken = userConfirmation.Token;
