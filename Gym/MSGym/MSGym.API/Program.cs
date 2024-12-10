@@ -1,8 +1,12 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MSGym.Application.Consumers;
+using MSGym.Application.Interfaces;
+using MSGym.Application.Services;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Interfaces.UnitOfWork;
+using MSGym.Domain.ModelErrors;
+using MSGym.Domain.Notifications;
 using MSGym.Domain.Services;
 using MSGym.Infrastructure.Data;
 using MSGym.Infrastructure.UnitOfWork;
@@ -17,11 +21,20 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add Notification
+builder.Services.AddScoped<NotificationContext>();
+
+// Add Model Errors
+builder.Services.AddScoped<ModelErrorsContext>();
+
 // Add Unit Of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
 builder.Services.AddScoped<IUserService, UserService>();
+
+// Add App Services
+builder.Services.AddScoped<IGymAppService, GymAppService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

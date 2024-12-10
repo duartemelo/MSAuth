@@ -14,7 +14,7 @@
             Name = name;
             Description = description;
             Categories = categories;
-            creationUserEmail = creationUserEmail;
+            CreationUserEmail = creationUserEmail;
         }
     }
 }

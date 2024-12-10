@@ -9,6 +9,8 @@
         public string ZipCode { get; set; }
         public string Email { get; set; }
         public string CreationUserEmail { get; set; }
+        public virtual ICollection<GymContact> Contacts { get; set; }
+        public virtual ICollection<GymSchedule> Schedules { get; set; }
 
         private Gym() // For EF
         { }
