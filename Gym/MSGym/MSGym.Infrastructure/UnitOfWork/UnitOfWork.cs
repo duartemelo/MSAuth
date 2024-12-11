@@ -11,6 +11,7 @@ namespace MSGym.Infrastructure.UnitOfWork
         private readonly ApplicationDbContext _context;
 
         private IBaseRepository<User> _userRepository = null!;
+        private IBaseRepository<Gym> _gymRepository = null!;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -34,5 +35,16 @@ namespace MSGym.Infrastructure.UnitOfWork
             }
         }
 
+        public IBaseRepository<Gym> GymRepository
+        {
+            get
+            {
+                if (_gymRepository == null)
+                {
+                    _gymRepository = new BaseRepository<Gym>(_context);
+                }
+                return _gymRepository;
+            }
+        }
     }
 }

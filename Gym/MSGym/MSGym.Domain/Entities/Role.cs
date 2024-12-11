@@ -8,6 +8,7 @@
         public bool CanEditGym { get; set; } = false;
         public bool CanCreateRoles { get; set; } = false;
         public bool CanAssignRoles { get; set; } = false;
+        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
 
         private Role () { }
 
@@ -16,6 +17,18 @@
             Gym = gym;
             Name = name;
             Duration = duration;
+
+            if (name == "Admin")
+            {
+                AssignAllRoles();
+            }
+        }
+
+        private void AssignAllRoles()
+        {
+            CanEditGym = true;
+            CanCreateRoles = true;
+            CanAssignRoles = true;
         }
     }
 }

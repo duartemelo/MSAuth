@@ -7,5 +7,6 @@ namespace MSGym.Domain.Interfaces.UnitOfWork
     {
         Task<bool> CommitAsync();
         public IBaseRepository<User> UserRepository { get; }
+        public IBaseRepository<Gym> GymRepository { get; }
     }
 }

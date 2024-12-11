@@ -17,7 +17,7 @@ namespace MSGym.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -52,7 +52,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Exercises");
+                    b.ToTable("Exercises", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.ExerciseCategory", b =>
@@ -90,7 +90,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("ExerciseCategories");
+                    b.ToTable("ExerciseCategories", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.Gym", b =>
@@ -138,7 +138,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gyms");
+                    b.ToTable("Gyms", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.GymContact", b =>
@@ -176,7 +176,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("GymId");
 
-                    b.ToTable("GymContacts");
+                    b.ToTable("GymContacts", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.GymSchedule", b =>
@@ -216,7 +216,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("GymId");
 
-                    b.ToTable("GymSchedules");
+                    b.ToTable("GymSchedules", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.Role", b =>
@@ -264,7 +264,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("TrainingPlanId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.TrainingPlan", b =>
@@ -302,7 +302,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("AthleteId");
 
-                    b.ToTable("TrainingPlans");
+                    b.ToTable("TrainingPlans", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.TrainingPlanExercise", b =>
@@ -343,7 +343,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("TrainingPlanId");
 
-                    b.ToTable("TrainingPlanExercises");
+                    b.ToTable("TrainingPlanExercises", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.User", b =>
@@ -383,7 +383,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.UserRole", b =>
@@ -422,7 +422,7 @@ namespace MSGym.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("MSGym.Domain.Entities.ExerciseCategory", b =>

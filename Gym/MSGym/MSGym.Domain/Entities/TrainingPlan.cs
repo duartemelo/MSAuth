@@ -7,7 +7,7 @@
         public ICollection<Role> ResponsibleRoles { get; set; }
         public string CreationUserEmail { get; set; }
         public User Athlete { get; set; }
-        public ICollection<TrainingPlanExercise> Exercises { get; set; }
+        public virtual ICollection<TrainingPlanExercise> Exercises { get; set; }
 
         private TrainingPlan() { }
 

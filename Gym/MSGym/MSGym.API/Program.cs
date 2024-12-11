@@ -1,7 +1,9 @@
+using AutoMapper;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MSGym.Application.Consumers;
 using MSGym.Application.Interfaces;
+using MSGym.Application.Mappings;
 using MSGym.Application.Services;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Interfaces.UnitOfWork;
@@ -14,6 +16,14 @@ using MSGym.Infrastructure.UnitOfWork;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new GymMappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -32,6 +42,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGymService, GymService>();
 
 // Add App Services
 builder.Services.AddScoped<IGymAppService, GymAppService>();
