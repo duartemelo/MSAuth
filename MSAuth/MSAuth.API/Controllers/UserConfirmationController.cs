@@ -43,7 +43,7 @@ namespace MSAuth.API.Controllers
         /// <param name="confirmationCreate"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create(UserConfirmationCreateDTO confirmationCreate) // TODO: change to user email's
+        public async Task<IActionResult> Create(UserConfirmationCreateDTO confirmationCreate)
         {
             string? result = await _userConfirmationAppService.Create(confirmationCreate);
             return DomainResult<string?>.Ok(result, _notificationContext, _modelErrorsContext);

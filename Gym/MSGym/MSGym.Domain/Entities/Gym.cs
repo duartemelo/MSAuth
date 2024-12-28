@@ -21,7 +21,7 @@
             Name = name; 
             Address = address; 
             ZipCode = zipCode; 
-            Email = email; // TODO: add validation on domain service
+            Email = email;
             CreationUserEmail = creationUser.Email;
             CreateGymAdminRole(creationUser);
         }

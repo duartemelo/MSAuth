@@ -1,29 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MSGym.Domain.DTOs;
 using MSGym.Domain.Entities;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Interfaces.UnitOfWork;
+using MSGym.Domain.Notifications;
+using static MSGym.Domain.Constants.Constants;
 
 namespace MSGym.Domain.Services
 {
     public class GymService : IGymService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GymService(IUnitOfWork unitOfWork)
+        private readonly EntityValidationService _entityValidationService;
+        private readonly IValidator<GymCreateDTO> _gymCreateDTOValidator;
+        private readonly NotificationContext _notificationContext;
+
+        public GymService(IUnitOfWork unitOfWork, EntityValidationService entityValidationService, IValidator<GymCreateDTO> gymCreateDTOValidator, NotificationContext notificationContext)
         {
             _unitOfWork = unitOfWork;
+            _entityValidationService = entityValidationService;
+            _gymCreateDTOValidator = gymCreateDTOValidator;
+            _notificationContext = notificationContext;
         }
 
         public async Task<Gym?> CreateGymAsync(GymCreateDTO gymToCreate)
         {
-            // TODO: validator
+            var validationResult = _entityValidationService.Validate(_gymCreateDTOValidator, gymToCreate);
+            if (!validationResult)
+            {
+                return null;
+            }
+
             var gymExists = await _unitOfWork.GymRepository
                 .GetEntity()
                 .AnyAsync(x => x.Name == gymToCreate.Name || x.Email == gymToCreate.Email);
 
             if (gymExists)
             {
-                // TODO: notif context
+                _notificationContext.AddNotification(NotificationKeys.GYM_ALREADY_EXISTS, string.Empty);
                 return null;
             }
 
@@ -33,7 +48,7 @@ namespace MSGym.Domain.Services
 
             if (user == null)
             {
-                // TODO: notif context
+                _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);
                 return null;
             }
 
@@ -43,7 +58,7 @@ namespace MSGym.Domain.Services
 
             if (!await _unitOfWork.CommitAsync())
             {
-                // TODO: notif context
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
                 return null;
             }
 

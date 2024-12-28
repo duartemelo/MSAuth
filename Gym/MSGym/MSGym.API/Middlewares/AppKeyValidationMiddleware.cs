@@ -5,7 +5,7 @@
         private readonly RequestDelegate _next;
         private readonly List<string> _allowedAppKeys;
 
-        public AppKeyValidationMiddleware(RequestDelegate next, IConfiguration configuration) // TODO: add to pipe
+        public AppKeyValidationMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _allowedAppKeys = configuration.GetSection("AllowedApps").Get<List<string>>()!;

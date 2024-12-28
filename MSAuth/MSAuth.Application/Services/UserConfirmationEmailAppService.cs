@@ -36,7 +36,7 @@ namespace MSAuth.Application.Services
 
         public async Task<string?> Create(UserConfirmationCreateDTO confirmationCreate)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(confirmationCreate.UserId);
+            var user = await _unitOfWork.UserRepository.GetByEmailAsync(confirmationCreate.Email);
             if (user == null)
             {
                 _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);

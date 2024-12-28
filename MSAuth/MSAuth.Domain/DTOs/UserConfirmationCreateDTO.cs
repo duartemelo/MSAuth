@@ -2,6 +2,6 @@
 {
     public class UserConfirmationCreateDTO
     {
-        public required long UserId { get; set; }
+        public required string Email { get; set; }
     }
 }

@@ -1,15 +1,19 @@
 using AutoMapper;
+using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using MSGym.API.ActionFilters;
 using MSGym.Application.Consumers;
 using MSGym.Application.Interfaces;
 using MSGym.Application.Mappings;
 using MSGym.Application.Services;
+using MSGym.Domain.DTOs;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Interfaces.UnitOfWork;
 using MSGym.Domain.ModelErrors;
 using MSGym.Domain.Notifications;
 using MSGym.Domain.Services;
+using MSGym.Domain.Validators;
 using MSGym.Infrastructure.Data;
 using MSGym.Infrastructure.UnitOfWork;
 
@@ -26,7 +30,11 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ModelErrorFilter>();
+    options.Filters.Add<NotificationFilter>();
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,8 +49,12 @@ builder.Services.AddScoped<ModelErrorsContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add Domain Services
+builder.Services.AddScoped<EntityValidationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGymService, GymService>();
+
+// Add Domain Validators
+builder.Services.AddScoped<IValidator<GymCreateDTO>, GymCreateDTOValidator>();
 
 // Add App Services
 builder.Services.AddScoped<IGymAppService, GymAppService>();

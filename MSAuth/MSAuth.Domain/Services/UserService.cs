@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MSAuth.Domain.DTOs;
 using MSAuth.Domain.Entities;
