@@ -1,7 +1,9 @@
 using AutoMapper;
 using FluentValidation;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MSGym.API.ActionFilters;
 using MSGym.Application.Consumers;
 using MSGym.Application.Interfaces;
@@ -16,6 +18,7 @@ using MSGym.Domain.Services;
 using MSGym.Domain.Validators;
 using MSGym.Infrastructure.Data;
 using MSGym.Infrastructure.UnitOfWork;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +66,9 @@ builder.Services.AddScoped<IGymAppService, GymAppService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 // MassTransit / RabbitMQ
 builder.Services.AddMassTransit(configure =>
 {
@@ -86,6 +92,23 @@ builder.Services.AddMassTransit(configure =>
     });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -97,6 +120,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

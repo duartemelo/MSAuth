@@ -38,7 +38,7 @@ namespace MSGym.Domain.Services
 
             if (gymExists)
             {
-                _notificationContext.AddNotification(NotificationKeys.GYM_ALREADY_EXISTS, string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.GYM_ALREADY_EXISTS);
                 return null;
             }
 
@@ -48,7 +48,7 @@ namespace MSGym.Domain.Services
 
             if (user == null)
             {
-                _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND, string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.USER_NOT_FOUND);
                 return null;
             }
 
@@ -58,11 +58,46 @@ namespace MSGym.Domain.Services
 
             if (!await _unitOfWork.CommitAsync())
             {
-                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR, string.Empty);
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR);
                 return null;
             }
 
             return createdGym;
+        }
+
+        public async Task<bool> DeleteGymAsync(long id, string requestUserEmail)
+        {
+            var gym = await _unitOfWork.GymRepository
+                .GetEntity()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (gym == null)
+            {
+                _notificationContext.AddNotification("GYM_NOT_FOUND"); // TODO: constants
+                return false;
+            }
+
+            if (gym.CreationUserEmail != requestUserEmail)
+            {
+                _notificationContext.AddNotification("USER_HAS_NO_PERMISSION_TO_DELETE_GYM"); // TODO: constants
+                return false;
+            }
+
+            if (gym.IsDeletable() == false)
+            {
+                _notificationContext.AddNotification("GYM_IS_NOT_DELETABLE");
+                return false;
+            }
+
+            _unitOfWork.GymRepository.Delete(gym);
+
+            if (!await _unitOfWork.CommitAsync())
+            {
+                _notificationContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR);
+                return false;
+            }
+
+            return true;
         }
     }
 }

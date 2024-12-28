@@ -8,7 +8,8 @@
         public bool CanEditGym { get; set; } = false;
         public bool CanCreateRoles { get; set; } = false;
         public bool CanAssignRoles { get; set; } = false;
-        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<TrainingPlan> ResponsibleTrainingPlans { get; set; }
 
         private Role () { }
 

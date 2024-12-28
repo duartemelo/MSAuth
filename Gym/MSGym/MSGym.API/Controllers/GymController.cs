@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MSGym.API.Extensions;
 using MSGym.Application.Interfaces;
 using MSGym.Domain.DTOs;
 using MSGym.Domain.ModelErrors;
 using MSGym.Domain.Notifications;
+using System.Security.Claims;
 
 namespace MSGym.API.Controllers
 {
@@ -27,6 +29,14 @@ namespace MSGym.API.Controllers
         {
             var createdGym = await _gymAppService.CreateGymAsync(gym);
             return DomainResult<GymCreateDTO?>.Ok(createdGym, _notificationContext, _modelErrorsContext);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteGym(long id)
+        {
+            var result = await _gymAppService.DeleteGymAsync(id);
+            return DomainResult<bool>.Ok(result, _notificationContext, _modelErrorsContext);
         }
     }
 }

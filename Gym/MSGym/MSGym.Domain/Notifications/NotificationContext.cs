@@ -10,6 +10,10 @@
 
         public bool HasNotifications => _notifications.Count != 0;
         public IReadOnlyCollection<Notification> Notifications => _notifications;
+        public void AddNotification(string error)
+        {
+            _notifications.Add(new Notification(error, string.Empty));
+        }
 
         public void AddNotification(string error, string message)
         {

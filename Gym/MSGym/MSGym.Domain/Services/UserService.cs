@@ -3,16 +3,20 @@ using MSGym.Domain.DTOs;
 using MSGym.Domain.Entities;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Interfaces.UnitOfWork;
+using MSGym.Domain.Notifications;
+using static MSGym.Domain.Constants.Constants;
 
 namespace MSGym.Domain.Services
 {
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly NotificationContext _notificatonContext;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, NotificationContext notificatonContext)
         {
             _unitOfWork = unitOfWork;
+            _notificatonContext = notificatonContext;
         }
 
         public async Task<User?> CreateUserAsync(UserCreateDTO userToCreate)
@@ -21,7 +25,7 @@ namespace MSGym.Domain.Services
 
             if (userExists)
             {
-                // TODO: notif context
+                _notificatonContext.AddNotification(NotificationKeys.USER_ALREADY_EXISTS);
                 return null;
             }
 
@@ -36,7 +40,7 @@ namespace MSGym.Domain.Services
 
             if (!await _unitOfWork.CommitAsync())
             {
-                // TODO: notif context
+                _notificatonContext.AddNotification(NotificationKeys.DATABASE_COMMIT_ERROR);
                 return null;
             }
 

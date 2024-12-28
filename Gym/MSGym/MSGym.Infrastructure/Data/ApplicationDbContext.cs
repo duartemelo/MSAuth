@@ -25,6 +25,24 @@ namespace MSGym.Infrastructure.Data
         {
             // Configurações adicionais, como chaves primárias compostas, índices, etc.
             base.OnModelCreating(modelBuilder);
+
+            // UserRole -> Role
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // GymContact -> Gym
+            modelBuilder.Entity<GymContact>()
+                .HasOne(gc => gc.Gym)
+                .WithMany(g => g.Contacts)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // GymSchedule -> Gym
+            modelBuilder.Entity<GymSchedule>()
+                .HasOne(gs => gs.Gym)
+                .WithMany(g => g.Schedules)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

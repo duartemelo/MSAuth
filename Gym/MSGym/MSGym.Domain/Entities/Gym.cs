@@ -32,5 +32,15 @@
             adminRole.UserRoles.Add(new(creationUser, adminRole, creationUser.Email));
             Roles.Add(adminRole);
         }
+
+        public bool IsDeletable() // TODO: test!
+        {
+            //if (Roles.Any(x => x.ResponsibleTrainingPlans.Count != 0)) // if there are training plans cannot delete
+            //{
+            //    return false;
+            //}
+
+            return true;
+        }
     }
 }
