@@ -2,16 +2,16 @@
 {
     public class Role : BaseEntity
     {
-        public Gym Gym { get; set; }
+        public virtual Gym Gym { get; set; }
         public string Name { get; set; }
         public TimeSpan? Duration { get; set; }
         public bool CanEditGym { get; set; } = false;
         public bool CanCreateRoles { get; set; } = false;
         public bool CanAssignRoles { get; set; } = false;
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-        public virtual ICollection<TrainingPlan> ResponsibleTrainingPlans { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+        public virtual List<TrainingPlan> TrainingPlans { get; } = [];
 
-        private Role () { }
+        protected Role () { }
 
         public Role(Gym gym, string name, TimeSpan? duration = null)
         {

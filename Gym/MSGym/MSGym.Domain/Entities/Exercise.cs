@@ -3,13 +3,15 @@
     public class Exercise : BaseEntity
     {
         public string Name { get; set; }
+        public virtual Gym? Gym { get; set; } // exercise can be or not generic
         public string? Description { get; set; }
-        public ICollection<ExerciseCategory> Categories { get; set; }
+        public string? ImagePath { get; set; }
+        public virtual List<ExerciseCategory> Categories { get; } = [];
         public string CreationUserEmail { get; set; }
 
-        private Exercise() { }
+        protected Exercise() { }
 
-        public Exercise(string name, ICollection<ExerciseCategory> categories, string creationUserEmail, string? description = null)
+        public Exercise(string name, List<ExerciseCategory> categories, string creationUserEmail, string? description = null)
         {
             Name = name;
             Description = description;

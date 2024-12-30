@@ -13,7 +13,7 @@
         public virtual ICollection<GymContact> Contacts { get; set; } = [];
         public virtual ICollection<GymSchedule> Schedules { get; set; } = [];
 
-        private Gym() // For EF
+        protected Gym() // For EF
         { }
 
         public Gym(string name, string address, string zipCode, string email, User creationUser)
@@ -33,13 +33,12 @@
             Roles.Add(adminRole);
         }
 
-        public bool IsDeletable() // TODO: test!
+        public bool IsDeletable()
         {
-            //if (Roles.Any(x => x.ResponsibleTrainingPlans.Count != 0)) // if there are training plans cannot delete
-            //{
-            //    return false;
-            //}
-
+            if (Roles.Any(x => x.TrainingPlans.Count != 0)) 
+            {
+                return false;
+            }
             return true;
         }
     }

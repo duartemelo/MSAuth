@@ -69,6 +69,8 @@ namespace MSGym.Domain.Services
         {
             var gym = await _unitOfWork.GymRepository
                 .GetEntity()
+                .Include(x => x.Roles)
+                    .ThenInclude(x => x.TrainingPlans) // if there are training plans, gym cannot be deleted
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (gym == null)

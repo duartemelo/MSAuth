@@ -1,25 +1,23 @@
 ﻿namespace MSGym.Domain.Entities
 {
-    // TODO: 
-    // training plan can be created without associating athlete, just for "template" purposes
     public class TrainingPlan : BaseEntity
     {
         public string Name { get; set; }
+        public virtual Gym? Gym { get; set; } // training plan can be or not generic
         public string? Description { get; set; }
-        public ICollection<Role> ResponsibleRoles { get; set; } // TODO: fix! this is not applied in database!
+        public virtual List<Role> ResponsibleRoles { get; } = [];
         public string CreationUserEmail { get; set; }
-        public User Athlete { get; set; }
+        public virtual List<User> Athletes { get; } = [];
         public virtual ICollection<TrainingPlanExercise> Exercises { get; set; }
 
-        private TrainingPlan() { }
+        protected TrainingPlan() { }
 
-        public TrainingPlan(string name, ICollection<Role> responsibleRoles, string creationUserEmail, User athlete, ICollection<TrainingPlanExercise> exercises, string? description = null)
+        public TrainingPlan(string name, List<Role> responsibleRoles, string creationUserEmail, List<User> athletes, string? description = null)
         {
             Name = name;
             ResponsibleRoles = responsibleRoles;
             CreationUserEmail = creationUserEmail;
-            Athlete = athlete;
-            Exercises = exercises;
+            Athletes = athletes;
             Description = description;
         }
     }

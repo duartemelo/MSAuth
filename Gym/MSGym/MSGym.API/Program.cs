@@ -40,7 +40,8 @@ builder.Services.AddControllers(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .UseLazyLoadingProxies());
 
 // Add Notification
 builder.Services.AddScoped<NotificationContext>();

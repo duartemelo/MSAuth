@@ -13,8 +13,9 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? PhoneNumber { get; set; }
+        public virtual List<TrainingPlan> TrainingPlans { get; } = [];
 
-        private User() { }
+        protected User() { }
 
         public User(long externalId, string email, string firstName, string lastName, string? phoneNumber)
         {

@@ -6,10 +6,10 @@ namespace MSGym.Domain.Entities
     {
         public ContactType ContactType { get; set; }
         public string Contact {  get; set; }
-        public Gym Gym { get; set; }
+        public virtual Gym Gym { get; set; }
         public string CreationUserEmail { get; set; }
 
-        private GymContact() { }
+        protected GymContact() { }
 
         public GymContact(ContactType contactType, string contact, Gym gym, string creationUserEmail) 
         {

@@ -2,12 +2,12 @@
 {
     public class UserRole : BaseEntity
     {
-        public User User { get; set; }
-        public Role Role { get; set; }
+        public virtual User User { get; set; }
+        public virtual Role Role { get; set; }
         public string CreationUserEmail { get; set; }
         public DateTime? ExpiryDate { get; set; }
 
-        private UserRole() { }
+        protected UserRole() { }
 
         public UserRole(User user, Role role, string creationUserEmail, DateTime? expiryDate = null)
         {
