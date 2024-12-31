@@ -2,7 +2,9 @@ using AutoMapper;
 using FluentValidation;
 using Hangfire;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MSAuth.API.ActionFilters;
 using MSAuth.API.Middlewares;
 using MSAuth.Application.Interfaces;
@@ -23,6 +25,7 @@ using MSAuth.Infrastructure.Data;
 using MSAuth.Infrastructure.Persistence.CachedRepositories;
 using MSAuth.Infrastructure.Services;
 using MSAuth.Infrastructure.UnitOfWork;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,6 +121,23 @@ builder.Services.AddHangfire((sp, config) =>
     config.UseSqlServerStorage(connectionString);
 });
 builder.Services.AddHangfireServer();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

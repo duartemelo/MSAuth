@@ -13,6 +13,15 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            // Skip validation in the Development environment
+            if (environment == "Development")
+            {
+                await _next(context);
+                return;
+            }
+
             if (!context.Request.Headers.TryGetValue("AppKey", out var extractedAppKey) || string.IsNullOrEmpty(extractedAppKey))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;

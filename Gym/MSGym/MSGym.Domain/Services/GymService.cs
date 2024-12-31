@@ -73,19 +73,19 @@ namespace MSGym.Domain.Services
 
             if (gym == null)
             {
-                _notificationContext.AddNotification("GYM_NOT_FOUND"); // TODO: constants
+                _notificationContext.AddNotification(NotificationKeys.GYM_NOT_FOUND);
                 return false;
             }
 
             if (gym.CreationUserEmail != requestUserEmail)
             {
-                _notificationContext.AddNotification("USER_HAS_NO_PERMISSION_TO_DELETE_GYM"); // TODO: constants
+                _notificationContext.AddNotification(NotificationKeys.USER_HAS_NO_PERMISSION_TO_DELETE_GYM);
                 return false;
             }
 
             if (gym.IsDeletable() == false)
             {
-                _notificationContext.AddNotification("GYM_IS_NOT_DELETABLE");
+                _notificationContext.AddNotification(NotificationKeys.GYM_IS_NOT_DELETABLE);
                 return false;
             }
 

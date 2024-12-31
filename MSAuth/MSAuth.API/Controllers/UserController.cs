@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MSAuth.API.Extensions;
 using MSAuth.Application.Interfaces;
 using MSAuth.Domain.DTOs;
@@ -57,5 +58,14 @@ namespace MSAuth.API.Controllers
             var result = await _userAppService.Refresh(refreshToken);
             return DomainResult<UserLoginResponseDTO?>.Ok(result, _notificationContext, _modelErrorsContext);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser(long id)
+        {
+            var result = true;
+            return DomainResult<bool>.Ok(result, _notificationContext, _modelErrorsContext);
+        }
+
     }
 }

@@ -25,6 +25,7 @@ namespace MSGym.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostGym(GymCreateDTO gym)
         {
             var createdGym = await _gymAppService.CreateGymAsync(gym);

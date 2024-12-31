@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MSGym.API.ActionFilters;
+using MSGym.API.Middlewares;
 using MSGym.Application.Consumers;
 using MSGym.Application.Interfaces;
 using MSGym.Application.Mappings;
@@ -111,6 +112,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Add Middlewares
+app.UseMiddleware<AppKeyValidationMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
