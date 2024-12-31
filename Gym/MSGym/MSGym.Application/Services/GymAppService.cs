@@ -5,6 +5,7 @@ using MSGym.Domain.DTOs;
 using MSGym.Domain.Interfaces.Services;
 using MSGym.Domain.Notifications;
 using System.Security.Claims;
+using static MSGym.Domain.Constants.Constants;
 
 namespace MSGym.Application.Services
 {
@@ -25,7 +26,15 @@ namespace MSGym.Application.Services
 
         public async Task<GymCreateDTO?> CreateGymAsync(GymCreateDTO gymToCreate)
         {
-            var createdGym = await _gymService.CreateGymAsync(gymToCreate);
+            var userEmail = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (userEmail == null)
+            {
+                _notificationContext.AddNotification(NotificationKeys.NO_EMAIL_FOUND_ON_CLAIM);
+                return null;
+            }
+
+            var createdGym = await _gymService.CreateGymAsync(gymToCreate, userEmail);
             return _mapper.Map<GymCreateDTO>(createdGym);
         }
 
@@ -35,7 +44,7 @@ namespace MSGym.Application.Services
 
             if (userEmail == null)
             {
-                _notificationContext.AddNotification("NO_EMAIL_FOUND_ON_CLAIM"); // TODO: constants
+                _notificationContext.AddNotification(NotificationKeys.NO_EMAIL_FOUND_ON_CLAIM);
                 return false;
             }
 

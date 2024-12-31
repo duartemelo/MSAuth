@@ -24,7 +24,7 @@ namespace MSGym.Domain.Services
             _notificationContext = notificationContext;
         }
 
-        public async Task<Gym?> CreateGymAsync(GymCreateDTO gymToCreate)
+        public async Task<Gym?> CreateGymAsync(GymCreateDTO gymToCreate, string userEmail)
         {
             var validationResult = _entityValidationService.Validate(_gymCreateDTOValidator, gymToCreate);
             if (!validationResult)
@@ -41,8 +41,6 @@ namespace MSGym.Domain.Services
                 _notificationContext.AddNotification(NotificationKeys.GYM_ALREADY_EXISTS);
                 return null;
             }
-
-            var userEmail = "postman2@temp.pt"; // TODO: gather user (how to get it from JWT?)
 
             var user = await _unitOfWork.UserRepository.GetEntity().FirstOrDefaultAsync(x => x.Email == userEmail);
 
